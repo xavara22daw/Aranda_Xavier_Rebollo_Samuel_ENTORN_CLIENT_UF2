@@ -1,0 +1,79 @@
+.celda {
+    width:20px;
+    height:20px;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+#contenedor-tableros{
+    width: 500px;
+    display:flex;
+    justify-content: space-between;
+}
+
+.tablero{
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.contenedor-barcos {
+    width: 500px;
+    height: 50px;
+    background-color: yellow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.submarine {
+    background-color: green;
+}
+
+.submarine-preview {
+    width: 10px;
+    height: 10px;
+    margin: 3px;
+}
+
+.destroyer{
+    background-color: red;
+}
+
+.destroyer-preview {
+    width: 20px;
+    height: 10px;
+    margin: 3px;
+}
+
+.cruiser {
+    background-color: blue;
+}
+.cruiser-preview {
+    width: 30px;
+    height: 10px;
+    margin: 3px;
+}
+
+
+.battleship {
+    background-color: black;
+}
+
+.battleship-preview {
+    width: 40px;
+    height: 10px;
+    margin: 3px;
+}
+
+.carrier {
+    background-color: orange;
+}
+
+.carrier-preview {
+    width: 50px;
+    height: 10px;
+    margin: 3px;
+}
