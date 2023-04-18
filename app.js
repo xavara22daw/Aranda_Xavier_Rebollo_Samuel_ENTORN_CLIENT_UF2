@@ -93,30 +93,72 @@ const barcos = [
 ];
 console.log(barcos);
 
+posicionesBarcos =[];
+
 const addBarcosOrdenador = (barco) => {
   // Se puede probar a hacer Set
   const celdasTablero = document.querySelectorAll("#ordenador div");
   let randomBoolean = Math.random() < 0.5;
   let isHorizontal = randomBoolean;
-  let randomIndiceInicial = Math.floor(Math.random() * width * width);
-  console.log(randomIndiceInicial);
+  let randomStartIndex = Math.floor(Math.random() * width * width);
+  console.log(randomStartIndex);
+
+  // Validar posicion inicial
+  let validStart = isHorizontal
+    ? randomStartIndex <= width * width - barco.celdas
+      ? randomStartIndex
+      : width * width - barco.celdas
+    : // Handle vertical
+    randomStartIndex <= width * width - width * barco.celdas
+    ? randomStartIndex
+    : randomStartIndex - barco.celdas * width + width;
 
   // Se puede probar a hacer Set
   bloquesBarcos = [];
 
   for (let i = 0; i < barco.celdas; i++) {
     if (isHorizontal) {
-      bloquesBarcos.push(celdasTablero[Number(randomIndiceInicial) + i]);
-    }else {
-      bloquesBarcos.push(celdasTablero[Number(randomIndiceInicial) + i * width]);
+      bloquesBarcos.push(celdasTablero[Number(validStart) + i]);
+    } else {
+      bloquesBarcos.push(celdasTablero[Number(validStart) + i * width]);
     }
   }
 
-  bloquesBarcos.forEach(bloqueBarco => {
-    bloqueBarco.classList.add(barco.nombre);
-    bloqueBarco.classList.add('taken');
-  })
+  let posicionValida;
+  //Horizontal else vertical
+  if (isHorizontal) {
+    bloquesBarcos.every(
+      (_bloqueBarco, index) =>
+        (posicionValida =
+          bloquesBarcos[0].id % width !==
+          width - (bloquesBarcos.length - (index + 1)))
+    );
+  } else {
+    bloquesBarcos.every(
+      (_bloqueBarco, index) =>
+        (posicionValida = bloquesBarcos[0].id < 90 + (width * index + 1))
+    );
+  }
+
+  const espacioLibre = bloquesBarcos.every(
+    (bloqueBarco) => !bloqueBarco.classList.contains("taken")
+  );
+
+  
+  
+
+  if (posicionValida && espacioLibre) {
+    console.log("Bloques barcos:",bloquesBarcos);
+    posicionesBarcos.push(bloquesBarcos);
+    bloquesBarcos.forEach((bloqueBarco) => {
+      bloqueBarco.classList.add(barco.nombre);
+      console.log("Barco.nombre:",barco.nombre);
+      bloqueBarco.classList.add("taken");
+    });
+  } else {
+    addBarcosOrdenador(barco);
+  }
 };
 
-addBarcosOrdenador(destroyer1);
-
+barcos.forEach((barco) => addBarcosOrdenador(barco));
+console.log("posicionesBarcos",posicionesBarcos);
