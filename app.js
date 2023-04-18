@@ -95,13 +95,13 @@ let notDropped;
 
 console.log(barcos);
 
-posicionesBarcos =[];
+posicionesBarcos = [];
 
 const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
   const celdasTablero = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
-  let isHorizontal = user === 'user' ? rotacion === 0 : randomBoolean;
+  let isHorizontal = user === "user" ? rotacion === 0 : randomBoolean;
   let randomStartIndex = Math.floor(Math.random() * width * width);
 
   let startIndex = startId ? startId : randomStartIndex;
@@ -149,47 +149,48 @@ const addBarcos = (user, barco, startId) => {
   );
 
   if (posicionValida && espacioLibre) {
-    console.log("Bloques barcos:",bloquesBarcos);
+    console.log("Bloques barcos:", bloquesBarcos);
     posicionesBarcos.push(bloquesBarcos);
     bloquesBarcos.forEach((bloqueBarco) => {
       bloqueBarco.classList.add(barco.nombre);
-      console.log("Barco.nombre:",barco.nombre);
+      console.log("Barco.nombre:", barco.nombre);
       bloqueBarco.classList.add("taken");
     });
   } else {
-    if (user === 'ordenador') addBarcos('ordenador',barco);
-    if (user === 'user') notDropped = true;
+    if (user === "ordenador") addBarcos("ordenador", barco);
+    if (user === "user") notDropped = true;
   }
 };
 
-barcos.forEach((barco) => addBarcos('ordenador', barco));
-console.log("posicionesBarcos",posicionesBarcos);
+barcos.forEach((barco) => addBarcos("ordenador", barco));
+console.log("posicionesBarcos", posicionesBarcos);
 
 // drag and drop mover barcos jugador
-let draggedShip
-const optionShips = Array.from(contenedorBarcos.children)
+let draggedShip;
+const optionShips = Array.from(contenedorBarcos.children);
 
 const dragStart = (e) => {
   notDropped = false;
   draggedShip = e.target;
-}
+};
 const dragOver = (e) => e.preventDefault();
 
 const dropShip = (e) => {
   const startId = e.target.id;
   const ship = barcos[draggedShip.id];
-  addBarcos("user", ship, startId)
-  if (!notDropped){
-    draggedShip.remove()
+  console.log("barco player:", ship);
+  addBarcos("user", ship, startId);
+  if (!notDropped) {
+    draggedShip.remove();
   }
-}
+};
 
-optionShips.forEach(optionShip => optionShip.addEventListener('dragstart', dragStart))
+optionShips.forEach((optionShip) =>
+  optionShip.addEventListener("dragstart", dragStart)
+);
 
-const celdasTableroJugador = document.querySelectorAll('#user div');
-celdasTableroJugador.forEach(celda => {
-  celda.addEventListener('dragover', dragOver)
-  celda.addEventListener('drop', dropShip)
-})
-
-
+const celdasTableroJugador = document.querySelectorAll("#user div");
+celdasTableroJugador.forEach((celda) => {
+  celda.addEventListener("dragover", dragOver);
+  celda.addEventListener("drop", dropShip);
+});
