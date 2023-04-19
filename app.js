@@ -91,32 +91,106 @@ const barcos = [
   battleship1,
   carrier1,
 ];
+let notDropped;
+
 console.log(barcos);
 
-const addBarcosOrdenador = (barco) => {
+posicionesBarcos = [];
+
+const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
-  const celdasTablero = document.querySelectorAll("#ordenador div");
+  const celdasTablero = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
-  let isHorizontal = randomBoolean;
-  let randomIndiceInicial = Math.floor(Math.random() * width * width);
-  console.log(randomIndiceInicial);
+  let isHorizontal = user === "user" ? rotacion === 0 : randomBoolean;
+  let randomStartIndex = Math.floor(Math.random() * width * width);
+
+  let startIndex = startId ? startId : randomStartIndex;
+  console.log(startIndex);
+
+  // Validar posicion inicial
+  let validStart = isHorizontal
+    ? startIndex <= width * width - barco.celdas
+      ? startIndex
+      : width * width - barco.celdas
+    : // Handle vertical
+    startIndex <= width * width - width * barco.celdas
+    ? startIndex
+    : startIndex - barco.celdas * width + width;
 
   // Se puede probar a hacer Set
   bloquesBarcos = [];
 
   for (let i = 0; i < barco.celdas; i++) {
     if (isHorizontal) {
-      bloquesBarcos.push(celdasTablero[Number(randomIndiceInicial) + i]);
-    }else {
-      bloquesBarcos.push(celdasTablero[Number(randomIndiceInicial) + i * width]);
+      bloquesBarcos.push(celdasTablero[Number(validStart) + i]);
+    } else {
+      bloquesBarcos.push(celdasTablero[Number(validStart) + i * width]);
     }
   }
 
-  bloquesBarcos.forEach(bloqueBarco => {
-    bloqueBarco.classList.add(barco.nombre);
-    bloqueBarco.classList.add('taken');
-  })
+  let posicionValida;
+  //Horizontal else vertical
+  if (isHorizontal) {
+    bloquesBarcos.every(
+      (_bloqueBarco, index) =>
+        (posicionValida =
+          bloquesBarcos[0].id % width !==
+          width - (bloquesBarcos.length - (index + 1)))
+    );
+  } else {
+    bloquesBarcos.every(
+      (_bloqueBarco, index) =>
+        (posicionValida = bloquesBarcos[0].id < 90 + (width * index + 1))
+    );
+  }
+
+  const espacioLibre = bloquesBarcos.every(
+    (bloqueBarco) => !bloqueBarco.classList.contains("taken")
+  );
+
+  if (posicionValida && espacioLibre) {
+    console.log("Bloques barcos:", bloquesBarcos);
+    posicionesBarcos.push(bloquesBarcos);
+    bloquesBarcos.forEach((bloqueBarco) => {
+      bloqueBarco.classList.add(barco.nombre);
+      console.log("Barco.nombre:", barco.nombre);
+      bloqueBarco.classList.add("taken");
+    });
+  } else {
+    if (user === "ordenador") addBarcos("ordenador", barco);
+    if (user === "user") notDropped = true;
+  }
 };
 
-addBarcosOrdenador(destroyer1);
+barcos.forEach((barco) => addBarcos("ordenador", barco));
+console.log("posicionesBarcos", posicionesBarcos);
 
+// drag and drop mover barcos jugador
+let draggedShip;
+const optionShips = Array.from(contenedorBarcos.children);
+
+const dragStart = (e) => {
+  notDropped = false;
+  draggedShip = e.target;
+};
+const dragOver = (e) => e.preventDefault();
+
+const dropShip = (e) => {
+  const startId = e.target.id;
+  const ship = barcos[draggedShip.id];
+  console.log("barco player:", ship);
+  addBarcos("user", ship, startId);
+  if (!notDropped) {
+    draggedShip.remove();
+  }
+};
+
+optionShips.forEach((optionShip) =>
+  optionShip.addEventListener("dragstart", dragStart)
+);
+
+const celdasTableroJugador = document.querySelectorAll("#user div");
+celdasTableroJugador.forEach((celda) => {
+  celda.addEventListener("dragover", dragOver);
+  celda.addEventListener("drop", dropShip);
+});
