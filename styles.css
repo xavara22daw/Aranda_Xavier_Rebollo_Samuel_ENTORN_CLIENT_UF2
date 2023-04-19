@@ -3,6 +3,10 @@ body {
   overflow-x: hidden;
 }
 
+#audioImage {
+  cursor: pointer;
+}
+
 .battleship-index {
   background-image: linear-gradient(rgba(4, 9, 30, 0.1), rgba(4, 9, 30, 0.1)),
     url("assets/battleship.png");

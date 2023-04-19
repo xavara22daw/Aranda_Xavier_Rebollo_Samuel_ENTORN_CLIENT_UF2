@@ -2,27 +2,50 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>Battle Ships</title>
+    <title>Battleship Game</title>
     <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap" rel="stylesheet" />
+    <script>
+      window.onload = function () {
+        // Variables de control
+        let estadoAudio = false;
+        let audioButton = document.getElementById("audioButton");
+        let audioImage = document.getElementById("audioImage");
+        let audio = document.getElementById("audio");
+
+        function controladorAudio() {
+          if (estadoAudio) {
+            // Cambiamos la imagen y pausamos el audio
+            audioImage.src = "assets/play.png";
+            audio.pause();
+            estadoAudio = false;
+          } else {
+            // Cambiamos la imagen y reanudamos el audio
+            audioImage.src = "assets/pause.png";
+            audio.play();
+            estadoAudio = true;
+          }
+        }
+        
+        // Al hacer clic sobre el botón, llamamos a la función 'controlarAudio()'
+        audioButton.onclick = function () {
+          controladorAudio();
+        };
+      };
+    </script>
   </head>
   <body class="battleship-index">
-    <audio id="theme" src="assets/theme.mp3" controls style="display: none;"></audio>
-    <div onclick="document.getElementById('theme').play()">
-      Reproducir
-    </div>
-    <div onclick="document.getElementById('theme').pause()">
-      Pausar
-    </div>
 
+    <!-- Audio que se reproducirá en la página y botón para controlarlo -->
+    <audio id="audio" src="assets/theme.mp3" loop="loop" autoplay="autoplay"></audio>
+    <div id="audioButton"><img id="audioImage" src="assets/play.png"></div>
+    
     <div class="splash-container">
-      <h1 class="splash-title">battleship</h1>
+      <h1 class="splash-title">BATTLESHIP</h1>
       <div>
         <a href="battleship.html" class="btn splash-btn">Comenzar a jugar</a>
       </div>
     </div>
+
   </body>
 </html>
