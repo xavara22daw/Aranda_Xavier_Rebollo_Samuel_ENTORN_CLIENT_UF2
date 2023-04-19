@@ -49,8 +49,6 @@ class barco {
     this.celdas = celdas;
     this.posiciones = posiciones;
     this.destruido = destruido;
-    
-
   }
 }
 
