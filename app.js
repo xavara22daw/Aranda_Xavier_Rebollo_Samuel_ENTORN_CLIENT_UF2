@@ -44,39 +44,43 @@ crearTablero("pink", "ordenador");
 
 //Crear barcos
 class barco {
-  constructor(nombre, celdas) {
+  constructor(nombre, celdas, posiciones ,destruido) {
     this.nombre = nombre;
     this.celdas = celdas;
+    this.posiciones = posiciones;
+    this.destruido = destruido;
+    
+
   }
 }
 
 class submarine extends barco {
   constructor() {
-    super("submarine", 1);
+    super("submarine", 1, [], false);
   }
 }
 
 class destroyer extends barco {
   constructor() {
-    super("destroyer", 2);
+    super("destroyer", 2, [], false);
   }
 }
 
 class cruiser extends barco {
   constructor() {
-    super("cruiser", 3);
+    super("cruiser", 3, [], false);
   }
 }
 
 class battleship extends barco {
   constructor() {
-    super("battleship", 4);
+    super("battleship", 4, [], false);
   }
 }
 
 class carrier extends barco {
   constructor() {
-    super("carrier", 5);
+    super("carrier", 5, [], false);
   }
 }
 
@@ -98,6 +102,9 @@ const barcos = [
   battleship1,
   carrier1,
 ];
+
+barcosOrdenador = [];
+barcosUser = [];
 
 let notDropped;
 
@@ -145,9 +152,9 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   return { bloquesBarco, valid, notTaken };
 }
 
-console.log(barcos);
 
 posicionesBarcos = [];
+
 
 const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
@@ -166,13 +173,14 @@ const addBarcos = (user, barco, startId) => {
   );
 
   if (valid && notTaken) {
-    console.log("Bloques barco:", bloquesBarco);
     posicionesBarcos.push(bloquesBarco);
     bloquesBarco.forEach((bloqueBarco) => {
       bloqueBarco.classList.add(barco.nombre);
-      console.log("Barco.nombre:", barco.nombre);
       bloqueBarco.classList.add("taken");
+      
+      barco.posiciones = bloquesBarco;
     });
+    if (user === "user") barcosUser.push(barco);
   } else {
     if (user === "ordenador") addBarcos("ordenador", barco, startId);
     if (user === "user") notDropped = true;
@@ -182,6 +190,9 @@ const addBarcos = (user, barco, startId) => {
 barcos.forEach((barco) => addBarcos("ordenador", barco));
 console.log("posicionesBarcos", posicionesBarcos);
 
+console.log("BARCOOOOOS:",barcos);
+barcosOrdenador = barcos;
+console.log("ORDENADOR BARCAZOOOOOOS: ",barcosOrdenador)
 // drag and drop mover barcos jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
@@ -233,7 +244,6 @@ function highlightArea(startIndex, ship) {
     ship
   );
   if (valid && notTaken) {
-    console.log("BLOQUES BARCOS JUGADOR:", bloquesBarco);
     //Recorre todas las celdas y si la celda corresponde al barco la pinta.
     celdasTableroJugador.forEach((celda) => {
       if (bloquesBarco.includes(celda)) {
@@ -253,9 +263,12 @@ let playerTurn;
 startButton.addEventListener("click", startGame);
 //Start Game
 function startGame() {
+  
   if (contenedorBarcos.children.length != 0) {
     infoDisplay.textContent = "Debes colocar todos los barcos para empezar.";
   } else {
+    console.log("barcosOrdenador:", barcosOrdenador);
+    console.log("barcosUser:", barcosUser);
     const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
     celdasTableroOrdenador.forEach((celda) =>
       celda.addEventListener("click", handleClick)
@@ -343,6 +356,10 @@ function computerTurn() {
   }
 }
 
-function checkScore() {
+function checkScore(user, userHits, userSunkShips) {
+
+  function checkShip(ship) {
+
+  }
 
 }
