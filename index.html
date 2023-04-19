@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Battle Ships</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="battleship-index">
+    <audio id="theme" src="assets/theme.mp3" controls style="display: none;"></audio>
+    <div onclick="document.getElementById('theme').play()">
+      Reproducir
+    </div>
+    <div onclick="document.getElementById('theme').pause()">
+      Pausar
+    </div>
+
+    <div class="splash-container">
+      <h1 class="splash-title">battleship</h1>
+      <div>
+        <a href="battleship.html" class="btn splash-btn">Comenzar a jugar</a>
+      </div>
+    </div>
+  </body>
+</html>
