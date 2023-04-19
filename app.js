@@ -93,21 +93,7 @@ const barcos = [
 ];
 let notDropped;
 
-console.log(barcos);
-
-posicionesBarcos = [];
-
-const addBarcos = (user, barco, startId) => {
-  // Se puede probar a hacer Set
-  const celdasTablero = document.querySelectorAll(`#${user} div`);
-  let randomBoolean = Math.random() < 0.5;
-  let isHorizontal = user === "user" ? rotacion === 0 : randomBoolean;
-  let randomStartIndex = Math.floor(Math.random() * width * width);
-
-  let startIndex = startId ? startId : randomStartIndex;
-  console.log(startIndex);
-
-  // Validar posicion inicial
+function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   let validStart = isHorizontal
     ? startIndex <= width * width - barco.celdas
       ? startIndex
@@ -128,27 +114,52 @@ const addBarcos = (user, barco, startId) => {
     }
   }
 
-  let posicionValida;
+  let valid;
   //Horizontal else vertical
   if (isHorizontal) {
     bloquesBarcos.every(
       (_bloqueBarco, index) =>
-        (posicionValida =
+        (valid =
           bloquesBarcos[0].id % width !==
           width - (bloquesBarcos.length - (index + 1)))
     );
   } else {
     bloquesBarcos.every(
       (_bloqueBarco, index) =>
-        (posicionValida = bloquesBarcos[0].id < 90 + (width * index + 1))
+        (valid = bloquesBarcos[0].id < 90 + (width * index + 1))
     );
   }
 
-  const espacioLibre = bloquesBarcos.every(
+  const notTaken = bloquesBarcos.every(
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-  if (posicionValida && espacioLibre) {
+  return { bloquesBarcos, valid, notTaken };
+}
+
+console.log(barcos);
+
+posicionesBarcos = [];
+
+const addBarcos = (user, barco, startId) => {
+  // Se puede probar a hacer Set
+  const celdasTablero = document.querySelectorAll(`#${user} div`);
+  let randomBoolean = Math.random() < 0.5;
+  let isHorizontal = user === "user" ? rotacion === 0 : randomBoolean;
+  let randomStartIndex = Math.floor(Math.random() * width * width);
+
+  let startIndex = startId ? startId : randomStartIndex;
+
+  const { bloquesBarcos, valid, notTaken } = getValidity(
+    celdasTablero,
+    isHorizontal,
+    startIndex,
+    barco
+  );
+
+  console.log(startIndex);
+
+  if (valid && notTaken) {
     console.log("Bloques barcos:", bloquesBarcos);
     posicionesBarcos.push(bloquesBarcos);
     bloquesBarcos.forEach((bloqueBarco) => {
@@ -157,7 +168,7 @@ const addBarcos = (user, barco, startId) => {
       bloqueBarco.classList.add("taken");
     });
   } else {
-    if (user === "ordenador") addBarcos("ordenador", barco);
+    if (user === "ordenador") addBarcos("ordenador", barco, startId);
     if (user === "user") notDropped = true;
   }
 };
@@ -173,13 +184,18 @@ const dragStart = (e) => {
   notDropped = false;
   draggedShip = e.target;
 };
-const dragOver = (e) => e.preventDefault();
+const dragOver = (e) => {
+  e.preventDefault();
+  const barco = barcos[draggedShip.id];
+  highlightArea(e.target.id, barco);
+};
 
 const dropShip = (e) => {
   const startId = e.target.id;
   const ship = barcos[draggedShip.id];
   console.log("barco player:", ship);
   addBarcos("user", ship, startId);
+
   if (!notDropped) {
     draggedShip.remove();
   }
@@ -194,3 +210,28 @@ celdasTableroJugador.forEach((celda) => {
   celda.addEventListener("dragover", dragOver);
   celda.addEventListener("drop", dropShip);
 });
+
+// Highlight
+function highlightArea(startIndex, ship) {
+  const celdasTableroJugador = document.querySelectorAll("#user div");
+  let isHorizontal = rotacion === 0;
+  console.log("startID:", startIndex);
+
+  const { bloquesBarcos, valid, notTaken } = getValidity(
+    celdasTableroJugador,
+    isHorizontal,
+    startIndex,
+    ship
+  );
+  if (valid && notTaken) {
+    console.log("BLOQUES BARCOS JUGADOR:", bloquesBarcos);
+    //Recorre todas las celdas y si la celda corresponde al barco la pinta.
+    celdasTableroJugador.forEach((celda) => {
+      if (bloquesBarcos.includes(celda)) {
+        celda.classList.add("hover");
+      } else {
+        celda.classList.remove("hover");
+      }
+    });
+  }
+}
