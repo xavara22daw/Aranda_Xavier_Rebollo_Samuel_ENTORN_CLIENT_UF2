@@ -44,7 +44,7 @@ crearTablero("ordenador");
 
 //Crear barcos
 class barco {
-  constructor(nombre, celdas, posiciones ,destruido) {
+  constructor(nombre, celdas, posiciones, destruido) {
     this.nombre = nombre;
     this.celdas = celdas;
     this.posiciones = posiciones;
@@ -150,9 +150,7 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   return { bloquesBarco, valid, notTaken };
 }
 
-
 posicionesBarcos = [];
-
 
 const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
@@ -175,7 +173,7 @@ const addBarcos = (user, barco, startId) => {
     bloquesBarco.forEach((bloqueBarco) => {
       bloqueBarco.classList.add(barco.nombre);
       bloqueBarco.classList.add("taken");
-      
+
       barco.posiciones = bloquesBarco;
     });
     if (user === "user") barcosUser.push(barco);
@@ -188,9 +186,9 @@ const addBarcos = (user, barco, startId) => {
 barcos.forEach((barco) => addBarcos("ordenador", barco));
 console.log("posicionesBarcos", posicionesBarcos);
 
-console.log("BARCOOOOOS:",barcos);
+console.log("BARCOOOOOS:", barcos);
 barcosOrdenador = barcos;
-console.log("ORDENADOR BARCAZOOOOOOS: ",barcosOrdenador)
+console.log("ORDENADOR BARCAZOOOOOOS: ", barcosOrdenador);
 // drag and drop mover barcos jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
@@ -265,9 +263,7 @@ function startGame() {
     infoDisplay.textContent = "Debes colocar todos los barcos para empezar.";
   } else {
     turnDisplay.textContent = "Tu turno";
-    infoDisplay.textContent = "Toca una celda para disparar."
-    checkScore('user', playerHits, playerSunkShips)
-    checkScore('computer', computerHits, computerSunkShips)
+    infoDisplay.textContent = "Toca una celda para disparar.";
     console.log("barcosOrdenador:", barcosOrdenador);
     console.log("barcosUser:", barcosUser);
     const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
@@ -277,10 +273,10 @@ function startGame() {
   }
 }
 
-let playerHits = [];
-let computerHits = [];
-const playerSunkShips = []
-const computerSunkShips = []
+let ordenadorDerribados = [];
+let jugadoresDerribados = [];
+const playerSunkShips = [];
+const computerSunkShips = [];
 
 function handleClick(e) {
   if (!gameOver) {
@@ -288,16 +284,17 @@ function handleClick(e) {
       e.target.classList.add("boom");
       infoDisplay.textContent = "Has tocado un barco!";
       let classes = Array.from(e.target.classList);
-      console.log(classes)
+      console.log(classes);
       // Filtramos quitando celda
       classes = classes.filter((className) => className !== "celda");
       // Filtramos quitando taken
       classes = classes.filter((className) => className !== "taken");
       // Filtramos quitando boom
       classes = classes.filter((className) => className !== "boom");
-      playerHits.push(...classes);
-      console.log("playerHits:", playerHits);
-      //checkScore('player', playerHits, playerSunkShips)
+      ordenadorDerribados.push(...classes);
+      ordenadorDerribados.push(e.target.id);
+      console.log("ordenadorDerribados:", ordenadorDerribados);
+      checkScore('ordenador', ordenadorDerribados, playerSunkShips)
     }
     if (!e.target.classList.contains("taken")) {
       infoDisplay.textContent = "No has tocado ningún barco.";
@@ -342,11 +339,12 @@ function computerTurn() {
         classes = classes.filter((className) => className !== "taken");
         // Filtramos quitando boom
         classes = classes.filter((className) => className !== "boom");
-        computerHits.push(...classes);
-        checkScore('computer', computerHits, computerSunkShips);
-      }else {
+        jugadoresDerribados.push(...classes);
+        jugadoresDerribados.push(celdasTableroJugador[randomIndex].id);
+        checkScore("user", jugadoresDerribados, computerSunkShips);
+      } else {
         infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
-        celdasTableroJugador[randomIndex].classList.add('empty')
+        celdasTableroJugador[randomIndex].classList.add("empty");
       }
     }, 2000);
 
@@ -354,25 +352,28 @@ function computerTurn() {
       playerTurn = true;
       turnDisplay.textContent = "Tu turno";
       infoDisplay.textContent = "Toca una celda para disparar.";
-      const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
-      celdasTableroOrdenador.forEach((celda) => celda.addEventListener('click', handleClick))
-    },4000)
+      const celdasTableroOrdenador =
+        document.querySelectorAll("#ordenador div");
+      celdasTableroOrdenador.forEach((celda) =>
+        celda.addEventListener("click", handleClick)
+      );
+    }, 4000);
   }
 }
 
-function checkScore(user, userHits, userSunkShips) {
-
-  function checkShip(ship) {
-      ship.posiciones.forEach((posicion) => {
-        
-      })
+function checkScore(user, arrayDerribados, userSunkShips) {
+  
+  function checkShip(barco) {
+    // Posible for of
+    for(let i = 0; i < barco.posiciones.length; i++) {
+      if(arrayDerribados.includes(barco.posiciones[i].id)){
+        console.log("TOCADO");
+        barco.posiciones[i] = null;
+      }
+    }
+    console.log(barco);
   }
 
-  if(user == "computer") {
-      barcosOrdenador.forEach(checkShip)
-  } else {
-    barcosUser.forEach(checkShip)
-  }
+  if(user === 'ordenador') barcosOrdenador.forEach((barco) => checkShip(barco))
+  if(user === 'user') barcosUser.forEach((barco) => checkShip(barco))
 }
-
-
