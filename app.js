@@ -101,8 +101,8 @@ const barcos = [
   carrier1,
 ];
 
-barcosOrdenador = [];
-barcosUser = [];
+
+
 
 let notDropped;
 
@@ -152,6 +152,8 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
 
 posicionesBarcos = [];
 
+let cmpt = 0;
+
 const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
   const celdasTablero = document.querySelectorAll(`#${user} div`);
@@ -187,8 +189,10 @@ barcos.forEach((barco) => addBarcos("ordenador", barco));
 console.log("posicionesBarcos", posicionesBarcos);
 
 console.log("BARCOOOOOS:", barcos);
+let cmpt = 0;
 barcosOrdenador = barcos;
-console.log("ORDENADOR BARCAZOOOOOOS: ", barcosOrdenador);
+barcosUser = [];
+console.log("BARCOOOOOS ORDENADOR:", barcosOrdenador);
 // drag and drop mover barcos jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
@@ -364,6 +368,7 @@ function computerTurn() {
 function checkScore(user, arrayDerribados, userSunkShips) {
   
   function checkShip(barco) {
+    console.log("CHECKSHIP BARCO:", barco)
     // Posible for of
     for(let i = 0; i < barco.posiciones.length; i++) {
       if(arrayDerribados.includes(barco.posiciones[i].id)){
