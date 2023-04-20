@@ -1,8 +1,14 @@
 //import { submarine, destroyer, cruiser, battleship, carrier } from "./barcos";
 
+//bloqueBarco cada bloque de barco especifico
+//bloquesBarco bloques de barco especifico
+
 const contenedorTableros = document.querySelector("#contenedor-tableros");
 const contenedorBarcos = document.querySelector(".contenedor-barcos");
 const rotarButton = document.querySelector("#rotar-btn");
+const startButton = document.querySelector("#start-btn");
+const infoDisplay = document.querySelector("#info");
+const turnDisplay = document.querySelector("#turn-display");
 
 // Rotar barcos para colocarlos en el tablero
 let rotacion = 0;
@@ -38,39 +44,41 @@ crearTablero("pink", "ordenador");
 
 //Crear barcos
 class barco {
-  constructor(nombre, celdas) {
+  constructor(nombre, celdas, posiciones ,destruido) {
     this.nombre = nombre;
     this.celdas = celdas;
+    this.posiciones = posiciones;
+    this.destruido = destruido;
   }
 }
 
 class submarine extends barco {
   constructor() {
-    super("submarine", 1);
+    super("submarine", 1, [], false);
   }
 }
 
 class destroyer extends barco {
   constructor() {
-    super("destroyer", 2);
+    super("destroyer", 2, [], false);
   }
 }
 
 class cruiser extends barco {
   constructor() {
-    super("cruiser", 3);
+    super("cruiser", 3, [], false);
   }
 }
 
 class battleship extends barco {
   constructor() {
-    super("battleship", 4);
+    super("battleship", 4, [], false);
   }
 }
 
 class carrier extends barco {
   constructor() {
-    super("carrier", 5);
+    super("carrier", 5, [], false);
   }
 }
 
@@ -82,6 +90,7 @@ const cruiser1 = new cruiser();
 const battleship1 = new battleship();
 const carrier1 = new carrier();
 
+//Poner en indexedDB
 const barcos = [
   submarine1,
   submarine2,
@@ -91,6 +100,10 @@ const barcos = [
   battleship1,
   carrier1,
 ];
+
+barcosOrdenador = [];
+barcosUser = [];
+
 let notDropped;
 
 function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
@@ -104,42 +117,42 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     : startIndex - barco.celdas * width + width;
 
   // Se puede probar a hacer Set
-  bloquesBarcos = [];
+  bloquesBarco = [];
 
   for (let i = 0; i < barco.celdas; i++) {
     if (isHorizontal) {
-      bloquesBarcos.push(celdasTablero[Number(validStart) + i]);
+      bloquesBarco.push(celdasTablero[Number(validStart) + i]);
     } else {
-      bloquesBarcos.push(celdasTablero[Number(validStart) + i * width]);
+      bloquesBarco.push(celdasTablero[Number(validStart) + i * width]);
     }
   }
 
   let valid;
   //Horizontal else vertical
   if (isHorizontal) {
-    bloquesBarcos.every(
+    bloquesBarco.every(
       (_bloqueBarco, index) =>
         (valid =
-          bloquesBarcos[0].id % width !==
-          width - (bloquesBarcos.length - (index + 1)))
+          bloquesBarco[0].id % width !==
+          width - (bloquesBarco.length - (index + 1)))
     );
   } else {
-    bloquesBarcos.every(
+    bloquesBarco.every(
       (_bloqueBarco, index) =>
-        (valid = bloquesBarcos[0].id < 90 + (width * index + 1))
+        (valid = bloquesBarco[0].id < 90 + (width * index + 1))
     );
   }
 
-  const notTaken = bloquesBarcos.every(
+  const notTaken = bloquesBarco.every(
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-  return { bloquesBarcos, valid, notTaken };
+  return { bloquesBarco, valid, notTaken };
 }
 
-console.log(barcos);
 
 posicionesBarcos = [];
+
 
 const addBarcos = (user, barco, startId) => {
   // Se puede probar a hacer Set
@@ -150,23 +163,22 @@ const addBarcos = (user, barco, startId) => {
 
   let startIndex = startId ? startId : randomStartIndex;
 
-  const { bloquesBarcos, valid, notTaken } = getValidity(
+  const { bloquesBarco, valid, notTaken } = getValidity(
     celdasTablero,
     isHorizontal,
     startIndex,
     barco
   );
 
-  console.log(startIndex);
-
   if (valid && notTaken) {
-    console.log("Bloques barcos:", bloquesBarcos);
-    posicionesBarcos.push(bloquesBarcos);
-    bloquesBarcos.forEach((bloqueBarco) => {
+    posicionesBarcos.push(bloquesBarco);
+    bloquesBarco.forEach((bloqueBarco) => {
       bloqueBarco.classList.add(barco.nombre);
-      console.log("Barco.nombre:", barco.nombre);
       bloqueBarco.classList.add("taken");
+      
+      barco.posiciones = bloquesBarco;
     });
+    if (user === "user") barcosUser.push(barco);
   } else {
     if (user === "ordenador") addBarcos("ordenador", barco, startId);
     if (user === "user") notDropped = true;
@@ -176,6 +188,9 @@ const addBarcos = (user, barco, startId) => {
 barcos.forEach((barco) => addBarcos("ordenador", barco));
 console.log("posicionesBarcos", posicionesBarcos);
 
+console.log("BARCOOOOOS:",barcos);
+barcosOrdenador = barcos;
+console.log("ORDENADOR BARCAZOOOOOOS: ",barcosOrdenador)
 // drag and drop mover barcos jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
@@ -183,7 +198,9 @@ const optionShips = Array.from(contenedorBarcos.children);
 const dragStart = (e) => {
   notDropped = false;
   draggedShip = e.target;
+  console.log(draggedShip);
 };
+//HACER DINAMICA
 const dragOver = (e) => {
   e.preventDefault();
   const barco = barcos[draggedShip.id];
@@ -195,6 +212,7 @@ const dropShip = (e) => {
   const ship = barcos[draggedShip.id];
   console.log("barco player:", ship);
   addBarcos("user", ship, startId);
+  celdasTableroJugador.forEach((celda) => celda.classList.remove("hover"));
 
   if (!notDropped) {
     draggedShip.remove();
@@ -217,21 +235,144 @@ function highlightArea(startIndex, ship) {
   let isHorizontal = rotacion === 0;
   console.log("startID:", startIndex);
 
-  const { bloquesBarcos, valid, notTaken } = getValidity(
+  const { bloquesBarco, valid, notTaken } = getValidity(
     celdasTableroJugador,
     isHorizontal,
     startIndex,
     ship
   );
   if (valid && notTaken) {
-    console.log("BLOQUES BARCOS JUGADOR:", bloquesBarcos);
     //Recorre todas las celdas y si la celda corresponde al barco la pinta.
     celdasTableroJugador.forEach((celda) => {
-      if (bloquesBarcos.includes(celda)) {
+      if (bloquesBarco.includes(celda)) {
         celda.classList.add("hover");
       } else {
         celda.classList.remove("hover");
       }
     });
+  } else {
+    celdasTableroJugador.forEach((celda) => celda.classList.remove("hover"));
   }
 }
+
+let gameOver = false;
+let playerTurn;
+
+startButton.addEventListener("click", startGame);
+//Start Game
+function startGame() {
+  if (contenedorBarcos.children.length != 0) {
+    infoDisplay.textContent = "Debes colocar todos los barcos para empezar.";
+  } else {
+    turnDisplay.textContent = "Tu turno";
+    infoDisplay.textContent = "Toca una celda para disparar."
+    checkScore('user', playerHits, playerSunkShips)
+    checkScore('computer', computerHits, computerSunkShips)
+    console.log("barcosOrdenador:", barcosOrdenador);
+    console.log("barcosUser:", barcosUser);
+    const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
+    celdasTableroOrdenador.forEach((celda) =>
+      celda.addEventListener("click", handleClick)
+    );
+  }
+}
+
+let playerHits = [];
+let computerHits = [];
+const playerSunkShips = []
+const computerSunkShips = []
+
+function handleClick(e) {
+  if (!gameOver) {
+    if (e.target.classList.contains("taken")) {
+      e.target.classList.add("boom");
+      infoDisplay.textContent = "Has tocado un barco!";
+      let classes = Array.from(e.target.classList);
+      console.log(classes)
+      // Filtramos quitando celda
+      classes = classes.filter((className) => className !== "celda");
+      // Filtramos quitando taken
+      classes = classes.filter((className) => className !== "taken");
+      // Filtramos quitando boom
+      classes = classes.filter((className) => className !== "boom");
+      playerHits.push(...classes);
+      console.log("playerHits:", playerHits);
+      //checkScore('player', playerHits, playerSunkShips)
+    }
+    if (!e.target.classList.contains("taken")) {
+      infoDisplay.textContent = "No has tocado ningún barco.";
+      e.target.classList.add("empty");
+    }
+    playerTurn = false;
+    const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
+    celdasTableroOrdenador.forEach((celda) =>
+      celda.replaceWith(celda.cloneNode(true))
+    );
+    setTimeout(computerTurn, 3000);
+  }
+}
+
+// Turno del ordenador
+function computerTurn() {
+  if (!gameOver) {
+    turnDisplay.textContent = "Turno del ordenador";
+    infoDisplay.textContent = "El ordenador está disparando...";
+
+    setTimeout(() => {
+      let randomIndex = Math.floor(Math.random() * width * width);
+      const celdasTableroJugador = document.querySelectorAll("#user div");
+
+      // Si la la celda ya es un barco tocado, vuelve a disparar.
+      if (
+        celdasTableroJugador[randomIndex].classList.contains("taken") &&
+        celdasTableroJugador[randomIndex].classList.contains("boom")
+      ) {
+        computerTurn();
+        return;
+      } else if (
+        celdasTableroJugador[randomIndex].classList.contains("taken") &&
+        !celdasTableroJugador[randomIndex].classList.contains("boom")
+      ) {
+        celdasTableroJugador[randomIndex].classList.add("boom");
+        infoDisplay.textContent = "El ordenador ha tocado un barco!";
+        let classes = Array.from(celdasTableroJugador[randomIndex].classList);
+        // Filtramos quitando celda
+        classes = classes.filter((className) => className !== "celda");
+        // Filtramos quitando taken
+        classes = classes.filter((className) => className !== "taken");
+        // Filtramos quitando boom
+        classes = classes.filter((className) => className !== "boom");
+        computerHits.push(...classes);
+        checkScore('computer', computerHits, computerSunkShips);
+      }else {
+        infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
+        celdasTableroJugador[randomIndex].classList.add('empty')
+      }
+    }, 3000);
+
+    setTimeout(() => {
+      playerTurn = true;
+      turnDisplay.textContent = "Tu turno";
+      infoDisplay.textContent = "Toca una celda para disparar.";
+      const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
+      celdasTableroOrdenador.forEach((celda) => celda.addEventListener('click', handleClick))
+    },6000)
+  }
+}
+
+function checkScore(user, userHits, userSunkShips) {
+
+  function checkShip(ship) {
+      ship.posiciones.forEach((posicion) => {
+        
+      })
+  }
+
+  if(user == "computer") {
+      barcosOrdenador.forEach(checkShip)
+  } else {
+    barcosUser.forEach(checkShip)
+  }
+}
+
+
