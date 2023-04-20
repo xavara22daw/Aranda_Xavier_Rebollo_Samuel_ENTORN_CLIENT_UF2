@@ -23,10 +23,10 @@ rotarButton.addEventListener("click", rotar);
 // Crear tablero
 const width = 10;
 
-const crearTablero = (color, usuario) => {
+const crearTablero = (usuario) => {
   const contenedorTablero = document.createElement("div");
   contenedorTablero.classList.add("tablero");
-  contenedorTablero.style.backgroundColor = color;
+  contenedorTablero.style.backgroundColor = "#00AAFF";
   contenedorTablero.id = usuario;
 
   for (let i = 0; i < width * width; i++) {
@@ -39,8 +39,8 @@ const crearTablero = (color, usuario) => {
   contenedorTableros.append(contenedorTablero);
 };
 
-crearTablero("cyan", "user");
-crearTablero("pink", "ordenador");
+crearTablero("user");
+crearTablero("ordenador");
 
 //Crear barcos
 class barco {
@@ -308,7 +308,7 @@ function handleClick(e) {
     celdasTableroOrdenador.forEach((celda) =>
       celda.replaceWith(celda.cloneNode(true))
     );
-    setTimeout(computerTurn, 3000);
+    setTimeout(computerTurn, 2000);
   }
 }
 
@@ -348,7 +348,7 @@ function computerTurn() {
         infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
         celdasTableroJugador[randomIndex].classList.add('empty')
       }
-    }, 3000);
+    }, 2000);
 
     setTimeout(() => {
       playerTurn = true;
@@ -356,7 +356,7 @@ function computerTurn() {
       infoDisplay.textContent = "Toca una celda para disparar.";
       const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
       celdasTableroOrdenador.forEach((celda) => celda.addEventListener('click', handleClick))
-    },6000)
+    },4000)
   }
 }
 

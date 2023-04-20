@@ -56,21 +56,29 @@ body {
 /*  */
 
 .celda {
-  width: 20px;
-  height: 20px;
-  border: 1px solid black;
+  width: 40px;
+  height: 40px;
+  border: 1px solid hsla(0, 0%, 100%, .2);
   box-sizing: border-box;
 }
 
 #contenedor-tableros {
-  width: 500px;
+  width: 45%;
   display: flex;
+  margin: auto;
   justify-content: space-between;
 }
 
 .tablero {
-  width: 200px;
-  height: 200px;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tablero2 {
+  width: 400px;
+  height: 400px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -82,6 +90,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: auto;
+  margin-top: 20px;
 }
 
 .submarine {
@@ -89,38 +99,38 @@ body {
 }
 
 .submarine-preview {
-  width: 10px;
-  height: 10px;
-  margin: 3px;
+  width: 20px;
+  height: 20px;
+  margin: 6px;
 }
 
 .destroyer {
-  background-color: red;
+  background-color: rgb(132, 255, 0);
 }
 
 .destroyer-preview {
-  width: 20px;
-  height: 10px;
-  margin: 3px;
+  width: 40px;
+  height: 20px;
+  margin: 6px;
 }
 
 .cruiser {
   background-color: blue;
 }
 .cruiser-preview {
-  width: 30px;
-  height: 10px;
-  margin: 3px;
+  width: 60px;
+  height: 20px;
+  margin: 6px;
 }
 
 .battleship {
-  background-color: grey;
+  background-color: rgb(245, 1, 253);
 }
 
 .battleship-preview {
-  width: 40px;
-  height: 10px;
-  margin: 3px;
+  width: 80px;
+  height: 20px;
+  margin: 6px;
 }
 
 .carrier {
@@ -128,9 +138,9 @@ body {
 }
 
 .carrier-preview {
-  width: 50px;
-  height: 10px;
-  margin: 3px;
+  width: 100px;
+  height: 20px;
+  margin: 6px;
 }
 
 .hover{
@@ -142,5 +152,12 @@ body {
 }
 
 .empty {
-  background-color: grey;
+  background-color: #84d2fa;
+}
+
+.botones-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
 }
