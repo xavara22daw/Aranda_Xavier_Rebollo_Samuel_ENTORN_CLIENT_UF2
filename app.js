@@ -288,10 +288,11 @@ function highlightArea(startIndex, ship) {
   }
 }
 
-let gameOver = false;
+let gameOver;
 let playerTurn;
 
 startButton.addEventListener("click", startGame);
+
 //Start Game
 function startGame() {
   if (contenedorBarcos.children.length != 0) {
@@ -341,6 +342,9 @@ function handleClick(e) {
       celda.replaceWith(celda.cloneNode(true))
     );
     setTimeout(computerTurn, 2000);
+  }else if(gameOver){
+    turnDisplay.textContent = "Juego finalizado";
+    infoDisplay.textContent = "El juego ha terminado.";
   }
 }
 
@@ -395,6 +399,9 @@ function computerTurn() {
         celda.addEventListener("click", handleClick)
       );
     }, 4000);
+  }else if(gameOver){
+    turnDisplay.textContent = "Juego finalizado";
+    infoDisplay.textContent = "El juego ha terminado.";
   }
 }
 
@@ -421,20 +428,24 @@ function checkScore(user, arrayDerribados, userSunkShips) {
     }
   }
 
-  let cmptDestruidos = 0;
+  let cmptUserDestruidos = 0;
+  let cmptOrdenadorDestruidos = 0;
   if (user === "ordenador") {
     barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
     barcosOrdenador.forEach((barquilloOrd) => {
-      if (barquilloOrd.destruido) cmptDestruidos++;
+      if (barquilloOrd.destruido) cmptOrdenadorDestruidos++;
     });
   }
   if (user === "user") {
     barcosUser.forEach((barco) => checkShip(barco, arrayDerribados));
     barcosUser.forEach((barquilloUser) => {
-      if (barquilloUser.destruido) cmptDestruidos++;
+      if (barquilloUser.destruido) cmptUserDestruidos++;
     });
   }
-  if (cmptDestruidos == 7) {
-    console.log("SE HAN DESTRUIDO ABSOLUTAMENTE TODOS LOS BARCOS");
+  if (cmptUserDestruidos == 7) {
+    gameOver = true;
+  }
+  if (cmptOrdenadorDestruidos == 7) {
+    gameOver = true
   }
 }
