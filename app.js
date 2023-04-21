@@ -10,6 +10,9 @@ const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
 
+turnDisplay.textContent = "Posicionar barcos"
+infoDisplay.textContent = "Coloque los barcos en su tablero para empezar la partida!"
+
 // Rotar barcos para colocarlos en el tablero
 let rotacion = 0;
 function rotar() {
