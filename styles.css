@@ -145,11 +145,13 @@ body {
 
 .hover{
   background-color: grey;
+  transition: 0.5s all
 }
 
 .boom {
   background-color: red;
   pointer-events: none;
+  transition: 0.5s all
 }
 
 .empty {

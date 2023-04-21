@@ -1,5 +1,8 @@
 //import { submarine, destroyer, cruiser, battleship, carrier } from "./barcos";
 
+
+// nº de turnos REDUCE
+//nº de celdas disponibles barco slice
 //bloqueBarco cada bloque de barco especifico
 //bloquesBarco bloques de barco especifico
 
