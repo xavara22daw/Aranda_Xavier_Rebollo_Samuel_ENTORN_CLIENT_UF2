@@ -351,7 +351,7 @@ function computerTurn() {
       // Si la la celda ya es un barco tocado, vuelve a disparar.
       if (
         celdasTableroJugador[randomIndex].classList.contains("taken") &&
-        celdasTableroJugador[randomIndex].classList.contains("boom")
+        celdasTableroJugador[randomIndex].classList.contains("boom") || celdasTableroJugador[randomIndex].classList.contains("empty")
       ) {
         computerTurn();
         return;

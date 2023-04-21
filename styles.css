@@ -149,10 +149,12 @@ body {
 
 .boom {
   background-color: red;
+  pointer-events: none;
 }
 
 .empty {
   background-color: #84d2fa;
+  pointer-events: none;
 }
 
 .botones-container {
