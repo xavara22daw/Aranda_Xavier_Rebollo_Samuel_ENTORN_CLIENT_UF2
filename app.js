@@ -44,7 +44,8 @@ crearTablero("ordenador");
 
 //Crear barcos
 class barco {
-  constructor(nombre, celdas, posiciones, destruido) {
+  constructor(id, nombre, celdas, posiciones, destruido) {
+    this.id = id;
     this.nombre = nombre;
     this.celdas = celdas;
     this.posiciones = posiciones;
@@ -54,55 +55,81 @@ class barco {
 
 class submarine extends barco {
   constructor() {
-    super("submarine", 1, [], false);
+    super(0, "submarine", 1, [], false);
   }
 }
 
 class destroyer extends barco {
   constructor() {
-    super("destroyer", 2, [], false);
+    super(0, "destroyer", 2, [], false);
   }
 }
 
 class cruiser extends barco {
   constructor() {
-    super("cruiser", 3, [], false);
+    super(0, "cruiser", 3, [], false);
   }
 }
 
 class battleship extends barco {
   constructor() {
-    super("battleship", 4, [], false);
+    super(0, "battleship", 4, [], false);
   }
 }
 
 class carrier extends barco {
   constructor() {
-    super("carrier", 5, [], false);
+    super(0, "carrier", 5, [], false);
   }
 }
 
-const submarine1 = new submarine();
-const submarine2 = new submarine();
-const destroyer1 = new destroyer();
-const destroyer2 = new destroyer();
-const cruiser1 = new cruiser();
-const battleship1 = new battleship();
-const carrier1 = new carrier();
+// Crear barcosOrdenador
+const submarineOrdenador1 = new submarine();
+const submarineOrdenador2 = new submarine();
+const destroyerOrdenador1 = new destroyer();
+const destroyerOrdenador2 = new destroyer();
+const cruiserOrdenador1 = new cruiser();
+const battleshipOrdenador1 = new battleship();
+const carrierOrdenador1 = new carrier();
 
-//Poner en indexedDB
-const barcos = [
-  submarine1,
-  submarine2,
-  destroyer1,
-  destroyer2,
-  cruiser1,
-  battleship1,
-  carrier1,
+const barcosOrdenador = [
+  submarineOrdenador1,
+  submarineOrdenador2,
+  destroyerOrdenador1,
+  destroyerOrdenador2,
+  cruiserOrdenador1,
+  battleshipOrdenador1,
+  carrierOrdenador1,
 ];
 
+// Crear barcosUser
+const submarineUser1 = new submarine();
+const submarineUser2 = new submarine();
+const destroyerUser1 = new destroyer();
+const destroyerUser2 = new destroyer();
+const cruiserUser1 = new cruiser();
+const battleshipUser1 = new battleship();
+const carrierUser1 = new carrier();
 
+const barcosUser = [
+  submarineUser1,
+  submarineUser2,
+  destroyerUser1,
+  destroyerUser2,
+  cruiserUser1,
+  battleshipUser1,
+  carrierUser1,
+];
+// Asignar id con for of
+let i = 0;
+for (barcoUser of barcosUser) {
+  barcoUser.id = i;
+  i++;
+}
 
+console.log("COMPROBAR ID BARCOS USER", barcosUser);
+
+//Poner en indexedDB
 
 let notDropped;
 
@@ -178,21 +205,18 @@ const addBarcos = (user, barco, startId) => {
 
       barco.posiciones = bloquesBarco;
     });
-    if (user === "user") barcosUser.push(barco);
+    if (user === "user") {
+      barcosUser[barco.id].posiciones = barco.posiciones;
+    }
   } else {
     if (user === "ordenador") addBarcos("ordenador", barco, startId);
     if (user === "user") notDropped = true;
   }
 };
 
-barcos.forEach((barco) => addBarcos("ordenador", barco));
-console.log("posicionesBarcos", posicionesBarcos);
+barcosOrdenador.forEach((barco) => addBarcos("ordenador", barco));
+console.log("BARCOS ORDENADOR:", barcosOrdenador);
 
-console.log("BARCOOOOOS:", barcos);
-let cmpt = 0;
-barcosOrdenador = barcos;
-barcosUser = [];
-console.log("BARCOOOOOS ORDENADOR:", barcosOrdenador);
 // drag and drop mover barcos jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
@@ -205,13 +229,13 @@ const dragStart = (e) => {
 //HACER DINAMICA
 const dragOver = (e) => {
   e.preventDefault();
-  const barco = barcos[draggedShip.id];
+  const barco = barcosUser[draggedShip.id];
   highlightArea(e.target.id, barco);
 };
 
 const dropShip = (e) => {
   const startId = e.target.id;
-  const ship = barcos[draggedShip.id];
+  const ship = barcosUser[draggedShip.id];
   console.log("barco player:", ship);
   addBarcos("user", ship, startId);
   celdasTableroJugador.forEach((celda) => celda.classList.remove("hover"));
@@ -236,6 +260,7 @@ function highlightArea(startIndex, ship) {
   const celdasTableroJugador = document.querySelectorAll("#user div");
   let isHorizontal = rotacion === 0;
   console.log("startID:", startIndex);
+  console.log("ship:", ship);
 
   const { bloquesBarco, valid, notTaken } = getValidity(
     celdasTableroJugador,
@@ -266,10 +291,10 @@ function startGame() {
   if (contenedorBarcos.children.length != 0) {
     infoDisplay.textContent = "Debes colocar todos los barcos para empezar.";
   } else {
+    console.log("BARCOSUSERBIEN:", barcosUser);
+    console.log("BARCOSORDENADORBIEN:", barcosOrdenador);
     turnDisplay.textContent = "Tu turno";
     infoDisplay.textContent = "Toca una celda para disparar.";
-    console.log("barcosOrdenador:", barcosOrdenador);
-    console.log("barcosUser:", barcosUser);
     const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
     celdasTableroOrdenador.forEach((celda) =>
       celda.addEventListener("click", handleClick)
@@ -298,7 +323,7 @@ function handleClick(e) {
       ordenadorDerribados.push(...classes);
       ordenadorDerribados.push(e.target.id);
       console.log("ordenadorDerribados:", ordenadorDerribados);
-      checkScore('ordenador', ordenadorDerribados, playerSunkShips)
+      checkScore("ordenador", ordenadorDerribados, playerSunkShips);
     }
     if (!e.target.classList.contains("taken")) {
       infoDisplay.textContent = "No has tocado ningún barco.";
@@ -366,19 +391,11 @@ function computerTurn() {
 }
 
 function checkScore(user, arrayDerribados, userSunkShips) {
-  
   function checkShip(barco) {
-    console.log("CHECKSHIP BARCO:", barco)
-    // Posible for of
-    for(let i = 0; i < barco.posiciones.length; i++) {
-      if(arrayDerribados.includes(barco.posiciones[i].id)){
-        console.log("TOCADO");
-        barco.posiciones[i] = null;
-      }
-    }
-    console.log(barco);
+    
   }
 
-  if(user === 'ordenador') barcosOrdenador.forEach((barco) => checkShip(barco))
-  if(user === 'user') barcosUser.forEach((barco) => checkShip(barco))
+  if (user === "ordenador")
+    barcosOrdenador.forEach((barco) => checkShip(barco));
+  if (user === "user") barcosUser.forEach((barco) => checkShip(barco));
 }
