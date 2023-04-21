@@ -321,7 +321,7 @@ function handleClick(e) {
       // Filtramos quitando boom
       classes = classes.filter((className) => className !== "boom");
       ordenadorDerribados.push(...classes);
-      ordenadorDerribados.push(e.target.id);
+      ordenadorDerribados.push(parseInt(e.target.id));
       console.log("ordenadorDerribados:", ordenadorDerribados);
       checkScore("ordenador", ordenadorDerribados, playerSunkShips);
     }
@@ -369,7 +369,9 @@ function computerTurn() {
         // Filtramos quitando boom
         classes = classes.filter((className) => className !== "boom");
         jugadoresDerribados.push(...classes);
-        jugadoresDerribados.push(celdasTableroJugador[randomIndex].id);
+        jugadoresDerribados.push(
+          parseInt(celdasTableroJugador[randomIndex].id)
+        );
         checkScore("user", jugadoresDerribados, computerSunkShips);
       } else {
         infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
@@ -391,11 +393,42 @@ function computerTurn() {
 }
 
 function checkScore(user, arrayDerribados, userSunkShips) {
-  function checkShip(barco) {
-    
+  function checkShip(barco, arrayDerribados) {
+    barco.posiciones.forEach((prueba) => {
+      for (let i = 0; i < arrayDerribados.length; i++) {
+        if (arrayDerribados[i] == prueba.id) {
+          prueba.id = "tocado";
+          console.log(barco);
+        }
+      }
+    });
+
+    let compt = 0;
+    for (let y = 0; y < barco.posiciones.length; y++) {
+      if (barco.posiciones[y].id == "tocado") {
+        compt++;
+      }
+    }
+
+    if (compt == barco.posiciones.length) {
+      barco.destruido = true;
+    }
   }
 
-  if (user === "ordenador")
-    barcosOrdenador.forEach((barco) => checkShip(barco));
-  if (user === "user") barcosUser.forEach((barco) => checkShip(barco));
+  let cmptDestruidos = 0;
+  if (user === "ordenador") {
+    barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
+    barcosOrdenador.forEach((barquilloOrd) => {
+      if (barquilloOrd.destruido) cmptDestruidos++;
+    });
+  }
+  if (user === "user") {
+    barcosUser.forEach((barco) => checkShip(barco, arrayDerribados));
+    barcosUser.forEach((barquilloUser) => {
+      if (barquilloUser.destruido) cmptDestruidos++;
+    });
+  }
+  if (cmptDestruidos == 7) {
+    console.log("SE HAN DESTRUIDO ABSOLUTAMENTE TODOS LOS BARCOS");
+  }
 }
