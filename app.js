@@ -63,11 +63,22 @@ class submarine extends barco {
   constructor() {
     super(0, "submarine", 1, [], false);
   }
+
+  mensajeDestruccion(){
+    console.log("El submarino ha sido destruido")
+    const infoDisplay = document.querySelector("#info")
+    infoDisplay.textContent ="El submarino ha sido destruido"
+  }
 }
 
 class destroyer extends barco {
   constructor() {
     super(0, "destroyer", 2, [], false);
+  }
+
+  mensajeDestruccion(){
+    console.log("El destructor ha sido destruido")
+    infoDisplay.textContent = "El destructor ha sido destruido"
   }
 }
 
@@ -75,17 +86,32 @@ class cruiser extends barco {
   constructor() {
     super(0, "cruiser", 3, [], false);
   }
+
+  mensajeDestruccion(){
+    console.log("El crucero ha sido destruido")
+    infoDisplay.textContent = "El crucero ha sido destruido"
+  }
 }
 
 class battleship extends barco {
   constructor() {
     super(0, "battleship", 4, [], false);
   }
+
+  mensajeDestruccion(){
+    console.log("El acorazado ha sido destruido")
+    infoDisplay.textContent = "El acorazado ha sido destruido"
+  }
 }
 
 class carrier extends barco {
   constructor() {
     super(0, "carrier", 5, [], false);
+  }
+
+  mensajeDestruccion(){
+    console.log("El portaaviones ha sido destruido")
+    infoDisplay.textContent = "El portaaviones ha sido destruido"
   }
 }
 
@@ -433,13 +459,18 @@ function checkScore(user, arrayDerribados, userSunkShips) {
   if (user === "ordenador") {
     barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
     barcosOrdenador.forEach((barquilloOrd) => {
-      if (barquilloOrd.destruido) cmptOrdenadorDestruidos++;
+      if (barquilloOrd.destruido){
+        
+        cmptOrdenadorDestruidos++;
+      }
     });
   }
   if (user === "user") {
     barcosUser.forEach((barco) => checkShip(barco, arrayDerribados));
     barcosUser.forEach((barquilloUser) => {
-      if (barquilloUser.destruido) cmptUserDestruidos++;
+      if (barquilloUser.destruido){
+        cmptUserDestruidos++;
+      }
     });
   }
   if (cmptUserDestruidos == 7) {
