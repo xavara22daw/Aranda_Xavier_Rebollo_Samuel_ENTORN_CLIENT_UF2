@@ -57,6 +57,11 @@ class barco {
     this.posiciones = posiciones;
     this.destruido = destruido;
   }
+
+  mensajeDestruccion(){
+    console.log("El barco ha sido destruido")
+    infoDisplay.textContent = "El barco ha sido destruido"
+  }
 }
 
 class submarine extends barco {
@@ -152,6 +157,10 @@ const barcosUser = [
   battleshipUser1,
   carrierUser1,
 ];
+
+const barcosOrdenadorDestruidos = []
+const barcosUserDestruidos = [];
+
 // Asignar id con for of
 let i = 0;
 for (barcoUser of barcosUser) {
@@ -253,12 +262,9 @@ console.log("BARCOS ORDENADOR:", barcosOrdenador);
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
 
-const dragStart = (e) => {
-  notDropped = false;
-  draggedShip = e.target;
-  console.log(draggedShip);
-};
-//HACER DINAMICA
+// ***** Función dinámica creada a través del constructor
+var dragStart = new Function("e", "notDropped = false; draggedShip = e.target; console.log(draggedShip);");
+
 const dragOver = (e) => {
   e.preventDefault();
   const barco = barcosUser[draggedShip.id];
@@ -432,51 +438,67 @@ function computerTurn() {
 }
 
 function checkScore(user, arrayDerribados, userSunkShips) {
+  
   function checkShip(barco, arrayDerribados) {
-    barco.posiciones.forEach((prueba) => {
-      for (let i = 0; i < arrayDerribados.length; i++) {
-        if (arrayDerribados[i] == prueba.id) {
-          prueba.id = "tocado";
-          console.log(barco);
+        barco.posiciones.forEach((prueba) => {
+          for (let i = 0; i < arrayDerribados.length; i++) {
+            if (arrayDerribados[i] == prueba.id) {
+              prueba.id = "tocado";
+              console.log(barco);
+            }
+          }
+        });
+
+        let compt = 0;
+        for (let y = 0; y < barco.posiciones.length; y++) {
+          if (barco.posiciones[y].id == "tocado") {
+            compt++;
+          }
         }
-      }
-    });
 
-    let compt = 0;
-    for (let y = 0; y < barco.posiciones.length; y++) {
-      if (barco.posiciones[y].id == "tocado") {
-        compt++;
-      }
-    }
-
-    if (compt == barco.posiciones.length) {
-      barco.destruido = true;
-    }
+        if (compt == barco.posiciones.length) {
+          barco.destruido = true;
+        }
   }
 
-  let cmptUserDestruidos = 0;
-  let cmptOrdenadorDestruidos = 0;
   if (user === "ordenador") {
+    // CHECK DE TODOS LOS BARCOS
     barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
+
+    
+    
+    // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
     barcosOrdenador.forEach((barquilloOrd) => {
       if (barquilloOrd.destruido){
-        
-        cmptOrdenadorDestruidos++;
+        barquilloOrd.mensajeDestruccion();
+        const index = barcosOrdenador.indexOf(barquilloOrd)
+        barcosOrdenadorDestruidos.push(barquilloOrd)
+        barcosOrdenador.splice(index,1)
+        console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos)
+        console.log("BarcosOrdenador:", barcosOrdenador);
       }
     });
   }
   if (user === "user") {
-    barcosUser.forEach((barco) => checkShip(barco, arrayDerribados));
+    // CHECK DE TODOS LOS BARCOS
+    barcosUser.forEach((barquilloUser) => checkShip(barquilloUser, arrayDerribados));
+    
+    // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
     barcosUser.forEach((barquilloUser) => {
       if (barquilloUser.destruido){
-        cmptUserDestruidos++;
+        barquilloUser.mensajeDestruccion();
+        const index = barcosUser.indexOf(barquilloUser)
+        barcosUserDestruidos.push(barquilloUser)
+        barcosUser.splice(index,1)
+        console.log("BarcosUserDestruidos:", barcosUserDestruidos)
+        console.log("BarcosUser:", barcosUser);
       }
     });
   }
-  if (cmptUserDestruidos == 7) {
+  if (barcosOrdenadorDestruidos.length == 7) {
     gameOver = true;
   }
-  if (cmptOrdenadorDestruidos == 7) {
+  if (barcosUserDestruidos == 7) {
     gameOver = true
   }
 }
