@@ -165,11 +165,9 @@ const nombresBarcos = barcosOrdenador.map(ship => {
   return { nombre: ship.nombre, celdas: ship.celdas };
 })
 
-console.log("NOMBREEEEEEEEEEEES BARCOS: ",nombresBarcos)
-
 /***************************************************** */
 const dbName = "BattleshipDB";
-const storeName = "barcos";
+const storeName = "Barcos";
 
 // Abrir la base de datos
 const request = indexedDB.open(dbName, 1);
@@ -188,8 +186,7 @@ request.onsuccess = (event) => {
   const objectStore = transaction.objectStore(storeName);
 
   // Asumiendo que los arrays tienen una propiedad "id" única
-  objectStore.add({ id: "barcosOrdenador", data: nombresBarcos });
-  objectStore.add({ id: "barcosUser", data: "barcosUser" });
+  objectStore.add({ id: "barcosDisponibles", data: nombresBarcos });
 
   // Manejar errores en caso de que no se puedan almacenar los datos
   transaction.onerror = (event) => {
@@ -213,14 +210,6 @@ request.onupgradeneeded = (event) => {
 };
 /************************************************* */
 
-let barcosOrdDinamico = barcosOrdenador.map((ship) => {
-  return ship;
-});
-
-let barcosUserDinamico = barcosUser.map((ship) => {
-  return ship;
-});
-
 const barcosOrdenadorDestruidos = [];
 const barcosUserDestruidos = [];
 
@@ -230,10 +219,6 @@ for (barcoUser of barcosUser) {
   barcoUser.id = i;
   i++;
 }
-
-console.log("COMPROBAR ID BARCOS USER", barcosUser);
-
-//Poner en indexedDB
 
 let notDropped;
 
@@ -535,35 +520,35 @@ function checkScore(user, arrayDerribados, userSunkShips) {
 
   if (user === "ordenador") {
     // CHECK DE TODOS LOS BARCOS
-    barcosOrdDinamico.forEach((barco) => checkShip(barco, arrayDerribados));
+    barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
 
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosOrdDinamico.forEach((barquilloOrd) => {
+    barcosOrdenador.forEach((barquilloOrd) => {
       if (barquilloOrd.destruido) {
         barquilloOrd.mensajeDestruccion();
-        const index = barcosOrdDinamico.indexOf(barquilloOrd);
+        const index = barcosOrdenador.indexOf(barquilloOrd);
         barcosOrdenadorDestruidos.push(barquilloOrd);
-        barcosOrdDinamico.splice(index, 1);
+        barcosOrdenador.splice(index, 1);
         console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos);
-        console.log("BarcosOrdenador:", barcosOrdDinamico);
+        console.log("BarcosOrdenador:", barcosOrdenador);
       }
     });
   }
   if (user === "user") {
     // CHECK DE TODOS LOS BARCOS
-    barcosUserDinamico.forEach((barquilloUser) =>
+    barcosUser.forEach((barquilloUser) =>
       checkShip(barquilloUser, arrayDerribados)
     );
 
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosUserDinamico.forEach((barquilloUser) => {
+    barcosUser.forEach((barquilloUser) => {
       if (barquilloUser.destruido) {
         barquilloUser.mensajeDestruccion();
-        const index = barcosUserDinamico.indexOf(barquilloUser);
+        const index = barcosUser.indexOf(barquilloUser);
         barcosUserDestruidos.push(barquilloUser);
-        barcosUserDinamico.splice(index, 1);
+        barcosUser.splice(index, 1);
         console.log("BarcosUserDestruidos:", barcosUserDestruidos);
-        console.log("BarcosUser:", barcosUserDinamico);
+        console.log("BarcosUser:", barcosUser);
       }
     });
   }
