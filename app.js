@@ -1,6 +1,5 @@
 //import { submarine, destroyer, cruiser, battleship, carrier } from "./barcos";
 
-
 // nº de turnos REDUCE
 //nº de celdas disponibles barco slice
 //bloqueBarco cada bloque de barco especifico
@@ -13,8 +12,9 @@ const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
 
-turnDisplay.textContent = "Posicionar barcos"
-infoDisplay.textContent = "Coloque los barcos en su tablero para empezar la partida!"
+turnDisplay.textContent = "Posicionar barcos";
+infoDisplay.textContent =
+  "Coloque los barcos en su tablero para empezar la partida!";
 
 // Rotar barcos para colocarlos en el tablero
 let rotacion = 0;
@@ -58,9 +58,9 @@ class barco {
     this.destruido = destruido;
   }
 
-  mensajeDestruccion(){
-    console.log("El barco ha sido destruido")
-    infoDisplay.textContent = "El barco ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El barco ha sido destruido");
+    infoDisplay.textContent = "El barco ha sido destruido";
   }
 }
 
@@ -69,10 +69,10 @@ class submarine extends barco {
     super(0, "submarine", 1, [], false);
   }
 
-  mensajeDestruccion(){
-    console.log("El submarino ha sido destruido")
-    const infoDisplay = document.querySelector("#info")
-    infoDisplay.textContent ="El submarino ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El submarino ha sido destruido");
+    const infoDisplay = document.querySelector("#info");
+    infoDisplay.textContent = "El submarino ha sido destruido";
   }
 }
 
@@ -81,9 +81,9 @@ class destroyer extends barco {
     super(0, "destroyer", 2, [], false);
   }
 
-  mensajeDestruccion(){
-    console.log("El destructor ha sido destruido")
-    infoDisplay.textContent = "El destructor ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El destructor ha sido destruido");
+    infoDisplay.textContent = "El destructor ha sido destruido";
   }
 }
 
@@ -92,9 +92,9 @@ class cruiser extends barco {
     super(0, "cruiser", 3, [], false);
   }
 
-  mensajeDestruccion(){
-    console.log("El crucero ha sido destruido")
-    infoDisplay.textContent = "El crucero ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El crucero ha sido destruido");
+    infoDisplay.textContent = "El crucero ha sido destruido";
   }
 }
 
@@ -103,9 +103,9 @@ class battleship extends barco {
     super(0, "battleship", 4, [], false);
   }
 
-  mensajeDestruccion(){
-    console.log("El acorazado ha sido destruido")
-    infoDisplay.textContent = "El acorazado ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El acorazado ha sido destruido");
+    infoDisplay.textContent = "El acorazado ha sido destruido";
   }
 }
 
@@ -114,9 +114,9 @@ class carrier extends barco {
     super(0, "carrier", 5, [], false);
   }
 
-  mensajeDestruccion(){
-    console.log("El portaaviones ha sido destruido")
-    infoDisplay.textContent = "El portaaviones ha sido destruido"
+  mensajeDestruccion() {
+    console.log("El portaaviones ha sido destruido");
+    infoDisplay.textContent = "El portaaviones ha sido destruido";
   }
 }
 
@@ -158,7 +158,15 @@ const barcosUser = [
   carrierUser1,
 ];
 
-const barcosOrdenadorDestruidos = []
+let barcosOrdDinamico = barcosOrdenador.map((ship) => {
+  return ship;
+});
+
+let barcosUserDinamico = barcosUser.map((ship) => {
+  return ship;
+});
+
+const barcosOrdenadorDestruidos = [];
 const barcosUserDestruidos = [];
 
 // Asignar id con for of
@@ -263,7 +271,10 @@ let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
 
 // ***** Función dinámica creada a través del constructor
-var dragStart = new Function("e", "notDropped = false; draggedShip = e.target; console.log(draggedShip);");
+var dragStart = new Function(
+  "e",
+  "notDropped = false; draggedShip = e.target; console.log(draggedShip);"
+);
 
 const dragOver = (e) => {
   e.preventDefault();
@@ -374,7 +385,7 @@ function handleClick(e) {
       celda.replaceWith(celda.cloneNode(true))
     );
     setTimeout(computerTurn, 2000);
-  }else if(gameOver){
+  } else if (gameOver) {
     turnDisplay.textContent = "Juego finalizado";
     infoDisplay.textContent = "El juego ha terminado.";
   }
@@ -392,8 +403,9 @@ function computerTurn() {
 
       // Si la la celda ya es un barco tocado, vuelve a disparar.
       if (
-        celdasTableroJugador[randomIndex].classList.contains("taken") &&
-        celdasTableroJugador[randomIndex].classList.contains("boom") || celdasTableroJugador[randomIndex].classList.contains("empty")
+        (celdasTableroJugador[randomIndex].classList.contains("taken") &&
+          celdasTableroJugador[randomIndex].classList.contains("boom")) ||
+        celdasTableroJugador[randomIndex].classList.contains("empty")
       ) {
         computerTurn();
         return;
@@ -431,67 +443,66 @@ function computerTurn() {
         celda.addEventListener("click", handleClick)
       );
     }, 4000);
-  }else if(gameOver){
+  } else if (gameOver) {
     turnDisplay.textContent = "Juego finalizado";
     infoDisplay.textContent = "El juego ha terminado.";
   }
 }
 
 function checkScore(user, arrayDerribados, userSunkShips) {
-  
   function checkShip(barco, arrayDerribados) {
-        barco.posiciones.forEach((prueba) => {
-          for (let i = 0; i < arrayDerribados.length; i++) {
-            if (arrayDerribados[i] == prueba.id) {
-              prueba.id = "tocado";
-              console.log(barco);
-            }
-          }
-        });
-
-        let compt = 0;
-        for (let y = 0; y < barco.posiciones.length; y++) {
-          if (barco.posiciones[y].id == "tocado") {
-            compt++;
-          }
+    barco.posiciones.forEach((prueba) => {
+      for (let i = 0; i < arrayDerribados.length; i++) {
+        if (arrayDerribados[i] == prueba.id) {
+          prueba.id = "tocado";
+          console.log(barco);
         }
+      }
+    });
 
-        if (compt == barco.posiciones.length) {
-          barco.destruido = true;
-        }
+    let compt = 0;
+    for (let y = 0; y < barco.posiciones.length; y++) {
+      if (barco.posiciones[y].id == "tocado") {
+        compt++;
+      }
+    }
+
+    if (compt == barco.posiciones.length) {
+      barco.destruido = true;
+    }
   }
 
   if (user === "ordenador") {
     // CHECK DE TODOS LOS BARCOS
-    barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
+    barcosOrdDinamico.forEach((barco) => checkShip(barco, arrayDerribados));
 
-    
-    
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosOrdenador.forEach((barquilloOrd) => {
-      if (barquilloOrd.destruido){
+    barcosOrdDinamico.forEach((barquilloOrd) => {
+      if (barquilloOrd.destruido) {
         barquilloOrd.mensajeDestruccion();
-        const index = barcosOrdenador.indexOf(barquilloOrd)
-        barcosOrdenadorDestruidos.push(barquilloOrd)
-        barcosOrdenador.splice(index,1)
-        console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos)
-        console.log("BarcosOrdenador:", barcosOrdenador);
+        const index = barcosOrdDinamico.indexOf(barquilloOrd);
+        barcosOrdenadorDestruidos.push(barquilloOrd);
+        barcosOrdDinamico.splice(index, 1);
+        console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos);
+        console.log("BarcosOrdenador:", barcosOrdDinamico);
       }
     });
   }
   if (user === "user") {
     // CHECK DE TODOS LOS BARCOS
-    barcosUser.forEach((barquilloUser) => checkShip(barquilloUser, arrayDerribados));
-    
+    barcosUserDinamico.forEach((barquilloUser) =>
+      checkShip(barquilloUser, arrayDerribados)
+    );
+
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosUser.forEach((barquilloUser) => {
-      if (barquilloUser.destruido){
+    barcosUserDinamico.forEach((barquilloUser) => {
+      if (barquilloUser.destruido) {
         barquilloUser.mensajeDestruccion();
-        const index = barcosUser.indexOf(barquilloUser)
-        barcosUserDestruidos.push(barquilloUser)
-        barcosUser.splice(index,1)
-        console.log("BarcosUserDestruidos:", barcosUserDestruidos)
-        console.log("BarcosUser:", barcosUser);
+        const index = barcosUserDinamico.indexOf(barquilloUser);
+        barcosUserDestruidos.push(barquilloUser);
+        barcosUserDinamico.splice(index, 1);
+        console.log("BarcosUserDestruidos:", barcosUserDestruidos);
+        console.log("BarcosUser:", barcosUserDinamico);
       }
     });
   }
@@ -499,6 +510,6 @@ function checkScore(user, arrayDerribados, userSunkShips) {
     gameOver = true;
   }
   if (barcosUserDestruidos == 7) {
-    gameOver = true
+    gameOver = true;
   }
 }
