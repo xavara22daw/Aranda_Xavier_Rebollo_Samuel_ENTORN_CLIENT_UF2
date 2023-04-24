@@ -149,15 +149,17 @@ body {
 }
 
 .boom {
-  background-image: url("assets/punto.png");
+  background-image: url("assets/barco_impactado.png");
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .empty {
-  background-color: #84d2fa;
-  pointer-events: none;
+  background-image: url("assets/barco_fallado.png");
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .botones-container {
