@@ -145,7 +145,7 @@ body {
 
 .hover {
   background-color: grey;
-  transition: 0.5s all;
+  transition: 0.2s all;
 }
 
 .boom {

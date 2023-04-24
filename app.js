@@ -11,6 +11,9 @@ const rotarButton = document.querySelector("#rotar-btn");
 const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
+const contadorTurnosDisplay = document.querySelector("#contador-turnos")
+
+let turnos = [1];
 
 turnDisplay.textContent = "Posicionar barcos";
 infoDisplay.textContent =
@@ -343,6 +346,7 @@ function startGame() {
   } else {
     console.log("BARCOSUSERBIEN:", barcosUser);
     console.log("BARCOSORDENADORBIEN:", barcosOrdenador);
+    contadorTurnosDisplay.textContent = "1";
     turnDisplay.textContent = "Tu turno";
     infoDisplay.textContent = "Toca una celda para disparar.";
     const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
@@ -435,6 +439,11 @@ function computerTurn() {
 
     setTimeout(() => {
       playerTurn = true;
+      turnos.push(1);
+      const turnosTotales = turnos.reduce((acumulador, valorActual) => {
+        return acumulador + valorActual
+      });
+      contadorTurnosDisplay.textContent = turnosTotales
       turnDisplay.textContent = "Tu turno";
       infoDisplay.textContent = "Toca una celda para disparar.";
       const celdasTableroOrdenador =
