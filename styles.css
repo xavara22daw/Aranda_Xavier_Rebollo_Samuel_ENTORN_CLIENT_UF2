@@ -58,7 +58,7 @@ body {
 .celda {
   width: 40px;
   height: 40px;
-  border: 1px solid hsla(0, 0%, 100%, .2);
+  border: 1px solid hsla(0, 0%, 100%, 0.2);
   box-sizing: border-box;
 }
 
@@ -143,15 +143,16 @@ body {
   margin: 6px;
 }
 
-.hover{
+.hover {
   background-color: grey;
-  transition: 0.5s all
+  transition: 0.5s all;
 }
 
 .boom {
-  background-color: red;
-  pointer-events: none;
-  transition: 0.5s all
+  background-image: url("assets/punto.png");
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .empty {
