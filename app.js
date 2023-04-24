@@ -11,7 +11,7 @@ const rotarButton = document.querySelector("#rotar-btn");
 const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
-const contadorTurnosDisplay = document.querySelector("#contador-turnos")
+const contadorTurnosDisplay = document.querySelector("#contador-turnos");
 
 let turnos = [1];
 
@@ -160,6 +160,58 @@ const barcosUser = [
   battleshipUser1,
   carrierUser1,
 ];
+
+const nombresBarcos = barcosOrdenador.map(ship => {
+  return { nombre: ship.nombre, celdas: ship.celdas };
+})
+
+console.log("NOMBREEEEEEEEEEEES BARCOS: ",nombresBarcos)
+
+/***************************************************** */
+const dbName = "BattleshipDB";
+const storeName = "barcos";
+
+// Abrir la base de datos
+const request = indexedDB.open(dbName, 1);
+
+// Manejar errores en caso de que no se pueda abrir la base de datos
+request.onerror = (event) => {
+  console.log("Error al abrir la base de datos", event.target.errorCode);
+};
+
+// Si se abre correctamente, almacenar los datos en la base de datos
+request.onsuccess = (event) => {
+  const db = event.target.result;
+
+  // Iniciar una transacción de escritura
+  const transaction = db.transaction([storeName], "readwrite");
+  const objectStore = transaction.objectStore(storeName);
+
+  // Asumiendo que los arrays tienen una propiedad "id" única
+  objectStore.add({ id: "barcosOrdenador", data: nombresBarcos });
+  objectStore.add({ id: "barcosUser", data: "barcosUser" });
+
+  // Manejar errores en caso de que no se puedan almacenar los datos
+  transaction.onerror = (event) => {
+    console.log("Error al almacenar los datos", event.target.errorCode);
+  };
+
+  // Cerrar la transacción y la base de datos
+  transaction.oncomplete = () => {
+    db.close();
+  };
+};
+
+// Crear la estructura de la base de datos si es necesario
+request.onupgradeneeded = (event) => {
+  const db = event.target.result;
+
+  // Crear la tabla si no existe
+  if (!db.objectStoreNames.contains(storeName)) {
+    const objectStore = db.createObjectStore(storeName, { keyPath: "id" });
+  }
+};
+/************************************************* */
 
 let barcosOrdDinamico = barcosOrdenador.map((ship) => {
   return ship;
@@ -441,9 +493,9 @@ function computerTurn() {
       playerTurn = true;
       turnos.push(1);
       const turnosTotales = turnos.reduce((acumulador, valorActual) => {
-        return acumulador + valorActual
+        return acumulador + valorActual;
       });
-      contadorTurnosDisplay.textContent = turnosTotales
+      contadorTurnosDisplay.textContent = turnosTotales;
       turnDisplay.textContent = "Tu turno";
       infoDisplay.textContent = "Toca una celda para disparar.";
       const celdasTableroOrdenador =
@@ -515,6 +567,7 @@ function checkScore(user, arrayDerribados, userSunkShips) {
       }
     });
   }
+  console.log("CELDAAAAAAAAAAAAAAAA");
   if (barcosOrdenadorDestruidos.length == 7) {
     gameOver = true;
   }
