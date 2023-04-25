@@ -1,4 +1,5 @@
 body {
+  font-family: "Montserrat", sans-serif;
   margin: 0;
   overflow-x: hidden;
 }
@@ -17,6 +18,15 @@ body {
 
 .btn {
   font-family: "Montserrat", sans-serif;
+}
+
+#game-info {
+  width: 45%;
+  margin: auto;
+  background-color: yellow;
+  box-sizing: border-box;
+  padding: 5px;
+  margin-bottom: 5px;
 }
 
 .splash-container {
@@ -53,6 +63,23 @@ body {
   font-weight: 500;
 }
 
+.background-juego {
+  background-image: url("assets/battleship-background.png");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.titulo {
+  font-family: "Bangers";
+  color: white;
+  text-align: center;
+  font-size: 5em;
+  -webkit-text-stroke: 3px black;
+  margin-top: 4%;
+  margin-bottom: 1%
+}
+
 .celda {
   width: 40px;
   height: 40px;
@@ -72,7 +99,7 @@ body {
   height: 400px;
   display: flex;
   flex-wrap: wrap;
-  border: 2px solid;
+  border: 2px solid white;
 }
 
 #ordenador {
@@ -89,11 +116,14 @@ body {
 .contenedor-barcos {
   width: 500px;
   height: 50px;
-  background-color: yellow;
+  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
+  opacity:0.9;
+  border: 1px solid black;
+  border-radius: 10px;
   margin-top: 20px;
 }
 

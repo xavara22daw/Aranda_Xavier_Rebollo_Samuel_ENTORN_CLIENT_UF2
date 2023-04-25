@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hundir la flota</title>
     <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap" rel="stylesheet" />
   </head>
-  <body>
-    <div id="container">
+  <body class="background-juego">
+    <audio id="audio" src="assets/theme.mp3" loop="loop" autoplay></audio>
+    <div class="titulo">BATTLESHIP</div>
       <div id="game-info">
-        <p>Nº de turno:<span id="contador-turnos"></span></p> 
-        <p>Turno: <span id="turn-display"></span></p>
-        <p>Información: <span id="info"></span></p>
+        <p><b>Nº de turno: </b><span id="contador-turnos"></span></p> 
+        <p><b>Turno: </b><span id="turn-display"></span></p>
+        <p><b>Información: </b><span id="info"></span></p>
       </div>
       <div id="contenedor-tableros"></div>
 
@@ -34,7 +36,7 @@
         <button id="rotar-btn">Rotar barcos</button>
         <button id="start-btn">Empezar partida</button>
       </div>
-    </div>
+      <div class="container"></div>
 
     <script src="app.js"></script>
   </body>
