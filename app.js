@@ -11,7 +11,7 @@ const rotarButton = document.querySelector("#rotar-btn");
 const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
-const contadorTurnosDisplay = document.querySelector("#contador-turnos")
+const contadorTurnosDisplay = document.querySelector("#contador-turnos");
 
 let turnos = [1];
 
@@ -169,10 +169,54 @@ barco.prototype.mensajeDestruccion = function () {
 let barcosOrdDinamico = barcosOrdenador.map((ship) => {
   return ship;
 });
+const nombresBarcos = barcosOrdenador.map(ship => {
+  return { nombre: ship.nombre, celdas: ship.celdas };
+})
 
-let barcosUserDinamico = barcosUser.map((ship) => {
-  return ship;
-});
+/***************************************************** */
+const dbName = "BattleshipDB";
+const storeName = "Barcos";
+
+// Abrir la base de datos
+const request = indexedDB.open(dbName, 1);
+
+// Manejar errores en caso de que no se pueda abrir la base de datos
+request.onerror = (event) => {
+  console.log("Error al abrir la base de datos", event.target.errorCode);
+};
+
+// Si se abre correctamente, almacenar los datos en la base de datos
+request.onsuccess = (event) => {
+  const db = event.target.result;
+
+  // Iniciar una transacción de escritura
+  const transaction = db.transaction([storeName], "readwrite");
+  const objectStore = transaction.objectStore(storeName);
+
+  // Asumiendo que los arrays tienen una propiedad "id" única
+  objectStore.add({ id: "barcosDisponibles", data: nombresBarcos });
+
+  // Manejar errores en caso de que no se puedan almacenar los datos
+  transaction.onerror = (event) => {
+    console.log("Error al almacenar los datos", event.target.errorCode);
+  };
+
+  // Cerrar la transacción y la base de datos
+  transaction.oncomplete = () => {
+    db.close();
+  };
+};
+
+// Crear la estructura de la base de datos si es necesario
+request.onupgradeneeded = (event) => {
+  const db = event.target.result;
+
+  // Crear la tabla si no existe
+  if (!db.objectStoreNames.contains(storeName)) {
+    const objectStore = db.createObjectStore(storeName, { keyPath: "id" });
+  }
+};
+/************************************************* */
 
 const barcosOrdenadorDestruidos = [];
 const barcosUserDestruidos = [];
@@ -444,9 +488,9 @@ function computerTurn() {
       playerTurn = true;
       turnos.push(1);
       const turnosTotales = turnos.reduce((acumulador, valorActual) => {
-        return acumulador + valorActual
+        return acumulador + valorActual;
       });
-      contadorTurnosDisplay.textContent = turnosTotales
+      contadorTurnosDisplay.textContent = turnosTotales;
       turnDisplay.textContent = "Tu turno";
       infoDisplay.textContent = "Toca una celda para disparar.";
       const celdasTableroOrdenador =
@@ -486,38 +530,39 @@ function checkScore(user, arrayDerribados, userSunkShips) {
 
   if (user === "ordenador") {
     // CHECK DE TODOS LOS BARCOS
-    barcosOrdDinamico.forEach((barco) => checkShip(barco, arrayDerribados));
+    barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
 
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosOrdDinamico.forEach((barquilloOrd) => {
+    barcosOrdenador.forEach((barquilloOrd) => {
       if (barquilloOrd.destruido) {
         barquilloOrd.mensajeDestruccion();
-        const index = barcosOrdDinamico.indexOf(barquilloOrd);
+        const index = barcosOrdenador.indexOf(barquilloOrd);
         barcosOrdenadorDestruidos.push(barquilloOrd);
-        barcosOrdDinamico.splice(index, 1);
+        barcosOrdenador.splice(index, 1);
         console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos);
-        console.log("BarcosOrdenador:", barcosOrdDinamico);
+        console.log("BarcosOrdenador:", barcosOrdenador);
       }
     });
   }
   if (user === "user") {
     // CHECK DE TODOS LOS BARCOS
-    barcosUserDinamico.forEach((barquilloUser) =>
+    barcosUser.forEach((barquilloUser) =>
       checkShip(barquilloUser, arrayDerribados)
     );
 
     // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
-    barcosUserDinamico.forEach((barquilloUser) => {
+    barcosUser.forEach((barquilloUser) => {
       if (barquilloUser.destruido) {
         barquilloUser.mensajeDestruccion();
-        const index = barcosUserDinamico.indexOf(barquilloUser);
+        const index = barcosUser.indexOf(barquilloUser);
         barcosUserDestruidos.push(barquilloUser);
-        barcosUserDinamico.splice(index, 1);
+        barcosUser.splice(index, 1);
         console.log("BarcosUserDestruidos:", barcosUserDestruidos);
-        console.log("BarcosUser:", barcosUserDinamico);
+        console.log("BarcosUser:", barcosUser);
       }
     });
   }
+  console.log("CELDAAAAAAAAAAAAAAAA");
   if (barcosOrdenadorDestruidos.length == 7) {
     gameOver = true;
   }
