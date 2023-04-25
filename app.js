@@ -60,16 +60,12 @@ class barco {
     this.posiciones = posiciones;
     this.destruido = destruido;
   }
-
-  mensajeDestruccion() {
-    console.log("El barco ha sido destruido");
-    infoDisplay.textContent = "El barco ha sido destruido";
-  }
 }
 
 class submarine extends barco {
-  constructor() {
+  constructor(profundidad) {
     super(0, "submarine", 1, [], false);
+    this.profundidad = profundidad;
   }
 
   mensajeDestruccion() {
@@ -80,8 +76,9 @@ class submarine extends barco {
 }
 
 class destroyer extends barco {
-  constructor() {
+  constructor(cañones) {
     super(0, "destroyer", 2, [], false);
+    this.cañones = cañones;
   }
 
   mensajeDestruccion() {
@@ -91,8 +88,9 @@ class destroyer extends barco {
 }
 
 class cruiser extends barco {
-  constructor() {
+  constructor(velocidad) {
     super(0, "cruiser", 3, [], false);
+    this.velocidad = velocidad;
   }
 
   mensajeDestruccion() {
@@ -102,8 +100,9 @@ class cruiser extends barco {
 }
 
 class battleship extends barco {
-  constructor() {
+  constructor(resistencia) {
     super(0, "battleship", 4, [], false);
+    this.resistencia = resistencia;
   }
 
   mensajeDestruccion() {
@@ -113,8 +112,9 @@ class battleship extends barco {
 }
 
 class carrier extends barco {
-  constructor() {
+  constructor(capacidadAviones) {
     super(0, "carrier", 5, [], false);
+    this.capacidadAviones = capacidadAviones;
   }
 
   mensajeDestruccion() {
@@ -124,13 +124,13 @@ class carrier extends barco {
 }
 
 // Crear barcosOrdenador
-const submarineOrdenador1 = new submarine();
-const submarineOrdenador2 = new submarine();
-const destroyerOrdenador1 = new destroyer();
-const destroyerOrdenador2 = new destroyer();
-const cruiserOrdenador1 = new cruiser();
-const battleshipOrdenador1 = new battleship();
-const carrierOrdenador1 = new carrier();
+const submarineOrdenador1 = new submarine(30);
+const submarineOrdenador2 = new submarine(20);
+const destroyerOrdenador1 = new destroyer(2);
+const destroyerOrdenador2 = new destroyer(3);
+const cruiserOrdenador1 = new cruiser(13);
+const battleshipOrdenador1 = new battleship(6);
+const carrierOrdenador1 = new carrier(7);
 
 const barcosOrdenador = [
   submarineOrdenador1,
@@ -141,15 +141,14 @@ const barcosOrdenador = [
   battleshipOrdenador1,
   carrierOrdenador1,
 ];
-
 // Crear barcosUser
-const submarineUser1 = new submarine();
-const submarineUser2 = new submarine();
-const destroyerUser1 = new destroyer();
-const destroyerUser2 = new destroyer();
-const cruiserUser1 = new cruiser();
-const battleshipUser1 = new battleship();
-const carrierUser1 = new carrier();
+const submarineUser1 = new submarine(33);
+const submarineUser2 = new submarine(18);
+const destroyerUser1 = new destroyer(3);
+const destroyerUser2 = new destroyer(3);
+const cruiserUser1 = new cruiser(15);
+const battleshipUser1 = new battleship(5);
+const carrierUser1 = new carrier(6);
 
 const barcosUser = [
   submarineUser1,
@@ -160,6 +159,12 @@ const barcosUser = [
   battleshipUser1,
   carrierUser1,
 ];
+
+// Prototipo mensaje destruccion
+barco.prototype.mensajeDestruccion = function () {
+  console.log("El barco ha sido destruido");
+  infoDisplay.textContent = "El barco ha sido destruido";
+};
 
 let barcosOrdDinamico = barcosOrdenador.map((ship) => {
   return ship;
@@ -180,8 +185,6 @@ for (barcoUser of barcosUser) {
 }
 
 console.log("COMPROBAR ID BARCOS USER", barcosUser);
-
-//Poner en indexedDB
 
 let notDropped;
 
