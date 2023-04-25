@@ -161,9 +161,9 @@ const barcosUser = [
   carrierUser1,
 ];
 
-const nombresBarcos = barcosOrdenador.map(ship => {
+const nombresBarcos = barcosOrdenador.map((ship) => {
   return { nombre: ship.nombre, celdas: ship.celdas };
-})
+});
 
 /***************************************************** */
 const dbName = "BattleshipDB";
@@ -287,13 +287,24 @@ const addBarcos = (user, barco, startId) => {
   );
 
   if (valid && notTaken) {
-    posicionesBarcos.push(bloquesBarco);
-    bloquesBarco.forEach((bloqueBarco) => {
-      bloqueBarco.classList.add(barco.nombre);
-      bloqueBarco.classList.add("taken");
+    if (user === "ordenador") {
+      posicionesBarcos.push(bloquesBarco);
+      bloquesBarco.forEach((bloqueBarco) => {
+        bloqueBarco.classList.add(barco.nombre);
+        bloqueBarco.classList.add("taken");
 
-      barco.posiciones = bloquesBarco;
-    });
+        barco.posiciones = bloquesBarco;
+      });
+    } else if (user === "user") {
+      posicionesBarcos.push(bloquesBarco);
+      bloquesBarco.forEach((bloqueBarco) => {
+        bloqueBarco.classList.add(barco.nombre);
+        bloqueBarco.classList.add("taken");
+
+        barco.posiciones = bloquesBarco;
+      });
+    }
+
     if (user === "user") {
       barcosUser[barco.id].posiciones = barco.posiciones;
     }
