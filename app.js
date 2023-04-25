@@ -166,7 +166,7 @@ barco.prototype.mensajeDestruccion = function () {
   infoDisplay.textContent = "El barco ha sido destruido";
 };
 
-const nombresBarcos = barcosOrdenador.map(ship => {
+const nombresBarcos = barcosOrdenador.map((ship) => {
   return { nombre: ship.nombre, celdas: ship.celdas };
 });
 
@@ -213,6 +213,13 @@ request.onupgradeneeded = (event) => {
     const objectStore = db.createObjectStore(storeName, { keyPath: "id" });
   }
 };
+/************************************************* */
+
+/************************************************* */
+localStorage.setItem("barcosDisponibles", JSON.stringify(nombresBarcos));
+// Consulta desde web storage
+let dadesWebStorage = localStorage.getItem("barcosDisponibles");
+console.log("Barcos disponibles en el juego desde web storage --> ", JSON.parse(dadesWebStorage));
 /************************************************* */
 
 const barcosOrdenadorDestruidos = [];
