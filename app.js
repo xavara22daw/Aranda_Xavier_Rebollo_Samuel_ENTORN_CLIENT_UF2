@@ -193,21 +193,14 @@ barco.prototype.mensajeDestruccion = function () {
   infoDisplay.textContent = "El barco ha sido destruido";
 };
 
-const nombresBarcos = barcosOrdenador.map((ship) => {
-  return { nombre: ship.nombre, celdas: ship.celdas };
-});
+let nombresBarcos = new Map();
 
-nombresBarcos.sort((a, b) => {
-  if (a.nombre < b.nombre) {
-    return -1;
-  } else if (a.nombre > b.nombre) {
-    return 1;
-  } else {
-    return 0;
-  }
+nombresBarcos = barcosOrdenador.map((ship, index) => {
+  return [
+    "Barco_" + parseInt(index + 1),
+    { nombre: ship.nombre, celdas: ship.celdas },
+  ];
 });
-
-console.log("sorteao", nombresBarcos);
 
 /***************************************************** */
 const dbName = "BattleshipDB";
@@ -232,11 +225,6 @@ request.onsuccess = (event) => {
   // Asumiendo que los arrays tienen una propiedad "id" única
   objectStore.add({ id: "barcosDisponibles", data: nombresBarcos });
 
-  // Manejar errores en caso de que no se puedan almacenar los datos
-  transaction.onerror = (event) => {
-    console.log("Error al almacenar los datos", event.target.errorCode);
-  };
-
   // Cerrar la transacción y la base de datos
   transaction.oncomplete = () => {
     db.close();
@@ -257,11 +245,15 @@ request.onupgradeneeded = (event) => {
 /************************************************* */
 localStorage.setItem("barcosDisponibles", JSON.stringify(nombresBarcos));
 // Consulta desde web storage
-let dadesWebStorage = localStorage.getItem("barcosDisponibles");
-console.log(
-  "Barcos disponibles en el juego desde web storage --> ",
-  JSON.parse(dadesWebStorage)
-);
+let queryWebStorage = localStorage.getItem("barcosDisponibles");
+queryWebStorage = JSON.parse(queryWebStorage);
+let dadesWebStorage = Object.fromEntries(queryWebStorage);
+for (const key in dadesWebStorage) {
+  console.log(
+    "Datos consultados desde web storage y mostrados con un for-in:",
+    `${key}: nombre -> ${dadesWebStorage[key].nombre}, celdas -> ${dadesWebStorage[key].celdas}`
+  );
+}
 /************************************************* */
 
 const barcosOrdenadorDestruidos = [];
@@ -445,13 +437,13 @@ const startButtonPresionado = () => {
     startButton.remove();
     rotarButton.remove();
     contenedorShips.remove();
-    const botonesContainer = document.querySelector('.botones-container');
-    const nuevoDiv = document.createElement('div');
-    nuevoDiv.textContent = 'Reiniciar partida';
-    nuevoDiv.classList.add('reiniciar-btn');
+    const botonesContainer = document.querySelector(".botones-container");
+    const nuevoDiv = document.createElement("div");
+    nuevoDiv.textContent = "Reiniciar partida";
+    nuevoDiv.classList.add("reiniciar-btn");
     botonesContainer.appendChild(nuevoDiv);
-    nuevoDiv.addEventListener("click", function() {
-        location.reload();
+    nuevoDiv.addEventListener("click", function () {
+      location.reload();
     });
     startGame();
   }
