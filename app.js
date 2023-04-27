@@ -312,12 +312,11 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-  setBloquesBarco = new Set(bloquesBarco);
 
-  return { setBloquesBarco, valid, notTaken };
+  return { bloquesBarco, valid, notTaken };
 }
 
-posicionesBarcos = [];
+posicionesBarcos = new Set();
 
 let cmpt = 0;
 
@@ -329,7 +328,7 @@ const addBarcos = (user, barco, startId) => {
 
   let startIndex = startId ? startId : randomStartIndex;
 
-  const { setBloquesBarco, valid, notTaken } = getValidity(
+  const { bloquesBarco, valid, notTaken } = getValidity(
     celdasTablero,
     isHorizontal,
     startIndex,
@@ -338,16 +337,16 @@ const addBarcos = (user, barco, startId) => {
 
   if (valid && notTaken) {
     if (user === "ordenador") {
-      posicionesBarcos.push(setBloquesBarco);
-      setBloquesBarco.forEach((bloqueBarco) => {
+      posicionesBarcos.add(bloquesBarco);
+      bloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
-        barco.posiciones = setBloquesBarco;
+        barco.posiciones = bloquesBarco;
       });
     } else if (user === "user") {
-      posicionesBarcos.push(setBloquesBarco);
-      setBloquesBarco.forEach((bloqueBarco) => {
+      posicionesBarcos.add(bloquesBarco);
+      bloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
@@ -412,17 +411,17 @@ function highlightArea(startIndex, ship) {
   console.log("startID:", startIndex);
   console.log("ship:", ship);
 
-  const { setBloquesBarco, valid, notTaken } = getValidity(
+  const { bloquesBarco, valid, notTaken } = getValidity(
     celdasTableroJugador,
     isHorizontal,
     startIndex,
     ship
   );
   if (valid && notTaken) {
-    console.log("Setbloquesbarcohover:", setBloquesBarco);
+    console.log("bloquesBarcohover:", bloquesBarco);
     //Recorre todas las celdas y si la celda corresponde al barco la pinta.
     celdasTableroJugador.forEach((celda) => {
-      if (setBloquesBarco.has(celda)) {
+      if (bloquesBarco.includes(celda)) {
         celda.classList.add("hover");
       } else {
         celda.classList.remove("hover");
