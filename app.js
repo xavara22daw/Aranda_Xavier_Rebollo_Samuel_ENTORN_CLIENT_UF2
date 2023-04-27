@@ -168,6 +168,7 @@ const barcosOrdenador = [
   battleshipOrdenador1,
   carrierOrdenador1,
 ];
+
 // Crear barcosUser
 const submarineUser1 = new submarine(33);
 const submarineUser2 = new submarine(18);
@@ -319,7 +320,9 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-  return { bloquesBarco, valid, notTaken };
+  setBloquesBarco = new Set(bloquesBarco);
+
+  return { setBloquesBarco, valid, notTaken };
 }
 
 posicionesBarcos = [];
@@ -334,7 +337,7 @@ const addBarcos = (user, barco, startId) => {
 
   let startIndex = startId ? startId : randomStartIndex;
 
-  const { bloquesBarco, valid, notTaken } = getValidity(
+  const { setBloquesBarco, valid, notTaken } = getValidity(
     celdasTablero,
     isHorizontal,
     startIndex,
@@ -343,8 +346,8 @@ const addBarcos = (user, barco, startId) => {
 
   if (valid && notTaken) {
     if (user === "ordenador") {
-      posicionesBarcos.push(bloquesBarco);
-      bloquesBarco.forEach((bloqueBarco) => {
+      posicionesBarcos.push(setBloquesBarco);
+      setBloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
@@ -352,7 +355,7 @@ const addBarcos = (user, barco, startId) => {
       });
     } else if (user === "user") {
       posicionesBarcos.push(bloquesBarco);
-      bloquesBarco.forEach((bloqueBarco) => {
+      setBloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
@@ -445,13 +448,13 @@ const startButtonPresionado = () => {
     startButton.remove();
     rotarButton.remove();
     contenedorShips.remove();
-    const botonesContainer = document.querySelector('.botones-container');
-    const nuevoDiv = document.createElement('div');
-    nuevoDiv.textContent = 'Reiniciar partida';
-    nuevoDiv.classList.add('reiniciar-btn');
+    const botonesContainer = document.querySelector(".botones-container");
+    const nuevoDiv = document.createElement("div");
+    nuevoDiv.textContent = "Reiniciar partida";
+    nuevoDiv.classList.add("reiniciar-btn");
     botonesContainer.appendChild(nuevoDiv);
-    nuevoDiv.addEventListener("click", function() {
-        location.reload();
+    nuevoDiv.addEventListener("click", function () {
+      location.reload();
     });
     startGame();
   }
