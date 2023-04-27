@@ -7,6 +7,7 @@ const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
 const contadorTurnosDisplay = document.querySelector("#contador-turnos");
 const contenedorShips = document.querySelector(".contenedor-contenedor-ships");
+const mensajeBarcosDisp = document.querySelector("#mensaje-disponibilidad");
 
 // Asignamos a variables los audios que vamos a utilizar en la página de juego (Efectos de sonido y música de fondo)
 let estadoAudio = true;
@@ -41,6 +42,13 @@ audioButton.onclick = function () {
 
 /* Array de turnos que vamos a utilizar para controlar los turnos que se realizan en el juego con un "REDUCE" */
 let turnos = [1];
+
+// Array que contiene un array con los nombres de los barcos que el usuario tiene que colocar. Se mostrará sorteado en la pantalla de juego
+let textoBarcosDisp = ["Submarinos", "Destroyers", "Crucero", "Acorazado", "Portaaviones"];
+
+for (let b of textoBarcosDisp){
+  console.log("XAAAAAAAAAAAAAAAAAAAAAAAAA -->", )
+}
 
 turnDisplay.textContent = "Posiciona los barcos en el tablero.";
 infoDisplay.textContent =
