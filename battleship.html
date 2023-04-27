@@ -32,6 +32,7 @@
     <audio id="audio-impactado" src="assets/audio/barco-impactado.mp3"></audio>
     <audio id="audio-fallado" src="assets/audio/barco-fallado.mp3"></audio>
     <audio id="audio-destruido" src="assets/audio/barco-impactado.mp3"></audio>
+    <audio id="audio-victoria" src="assets/audio/musica-victoria.mp3"></audio>
 
     <!-- Contenido de la página -->
     <div class="titulo">BATTLESHIP</div>
@@ -50,7 +51,7 @@
     </div>
 
     <div class="contenedor-contenedor-ships">
-      <p id="mensaje-disponibilidad">Tus barcos disponibles</p>
+      <p id="mensaje-disponibilidad">Tus barcos disponibles: </p>
       <div class="contenedor-barcos">
         <div id="0" class="submarine-preview submarine" draggable="true"></div>
         <div id="1" class="submarine-preview submarine" draggable="true"></div>
@@ -67,7 +68,7 @@
     </div>
 
     <div class="botones-container">
-      <div class="inicio-btn"><a href="/">Volver a inicio</a></div>
+      <a class="inicio-btn" href="/"><div>Volver a inicio</div></a>
       <div id="rotar-btn">Rotar los barcos</div>
       <div id="start-btn">Empezar partida</div>
     </div>
