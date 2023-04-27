@@ -316,7 +316,7 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   return { bloquesBarco, valid, notTaken };
 }
 
-posicionesBarcos = [];
+posicionesBarcos = new Set();
 
 let cmpt = 0;
 
@@ -337,7 +337,7 @@ const addBarcos = (user, barco, startId) => {
 
   if (valid && notTaken) {
     if (user === "ordenador") {
-      posicionesBarcos.push(bloquesBarco);
+      posicionesBarcos.add(bloquesBarco);
       bloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
@@ -345,7 +345,7 @@ const addBarcos = (user, barco, startId) => {
         barco.posiciones = bloquesBarco;
       });
     } else if (user === "user") {
-      posicionesBarcos.push(bloquesBarco);
+      posicionesBarcos.add(bloquesBarco);
       bloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
