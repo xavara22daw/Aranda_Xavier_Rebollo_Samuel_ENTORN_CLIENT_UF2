@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Battleship Game</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bienvenidos a Battleship</title>
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css?family=Black+Ops+One|Open+Sans" rel="stylesheet"/>
+    <!-- Pequeño JavaScript para controlar la reproducción del audio y botón que controla el sonido -->
     <script>
       window.onload = function () {
-        // Variables de control
         let estadoAudio = false;
         let audioButton = document.getElementById("audioButton");
         let audioImage = document.getElementById("audioImage");
         let audio = document.getElementById("audio");
+        audio.volume = "0.2";
 
         function controladorAudio() {
           if (estadoAudio) {
             // Cambiamos la imagen y pausamos el audio
-            audioImage.src = "assets/play.png";
+            audioImage.src = "assets/images/play.png";
             audio.pause();
             estadoAudio = false;
           } else {
             // Cambiamos la imagen y reanudamos el audio
-            audioImage.src = "assets/pause.png";
+            audioImage.src = "assets/images/pause.png";
             audio.play();
             estadoAudio = true;
           }
         }
-        
+
         // Al hacer clic sobre el botón, llamamos a la función 'controlarAudio()'
         audioButton.onclick = function () {
           controladorAudio();
@@ -36,14 +43,17 @@
   </head>
   <body class="battleship-index">
 
-    <!-- Audio que se reproducirá en la página y botón para controlarlo -->
-    <audio id="audio" src="assets/theme.mp3" loop="loop"></audio>
-    <div id="audioButton"><img id="audioImage" src="assets/play.png"></div>
-    
-    <div class="splash-container">
-      <h1 class="splash-title">BATTLESHIP</h1>
+    <!-- Botón y audio que se reproduce en la página el cual podremos controlar -->
+    <audio id="audio" src="assets/audio/theme.mp3" loop="loop"></audio>
+    <div id="audioButton">
+      <img id="audioImage" src="assets/images/play.png" />
+    </div>
+
+    <!-- Título y botón de la página principal del juego -->
+    <div class="index-container">
+      <h1 class="index-title">BATTLESHIP</h1>
       <div>
-        <a href="battleship.html" class="btn splash-btn">Comenzar a jugar</a>
+        <a href="battleship.html" class="btn index-btn">Comenzar a jugar</a>
       </div>
     </div>
 

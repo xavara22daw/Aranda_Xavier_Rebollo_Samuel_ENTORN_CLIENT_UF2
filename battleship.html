@@ -4,20 +4,52 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hundir la flota</title>
+    <title>Battleship</title>
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Black+Ops+One|Open+Sans"
+      rel="stylesheet"
+    />
   </head>
   <body class="background-juego">
-    <audio id="audio" src="assets/theme.mp3" loop="loop" autoplay></audio>
-    <div class="titulo">BATTLESHIP</div>
-      <div id="game-info">
-        <p><b>Nº de turno: </b><span id="contador-turnos"></span></p> 
-        <p><b>Turno: </b><span id="turn-display"></span></p>
-        <p><b>Información: </b><span id="info"></span></p>
-      </div>
-      <div id="contenedor-tableros"></div>
+    <!-- Botón y audio de fondo que se reproduce en la página el cual podremos controlar -->
+    <audio
+      id="audio-theme"
+      src="assets/audio/theme-ingame.mp3"
+      loop="loop"
+      autoplay
+    ></audio>
+    <div id="audioButton">
+      <img id="audioImage" src="assets/images/pause.png" />
+    </div>
 
+    <!-- Audios que se reproducen al disparar a las casillas del rival (Barco impacatado, destruido o agua) -->
+    <audio id="audio-impactado" src="assets/audio/barco-impactado.mp3"></audio>
+    <audio id="audio-fallado" src="assets/audio/barco-fallado.mp3"></audio>
+    <audio id="audio-destruido" src="assets/audio/barco-impactado.mp3"></audio>
+
+    <!-- Contenido de la página -->
+    <div class="titulo">BATTLESHIP</div>
+    <div id="game-info">
+      <p>
+        <b>Número de turno: </b
+        ><span id="contador-turnos">Partida por comenzar...</span>
+      </p>
+      <p><b>Turno: </b><span id="turn-display"></span></p>
+      <p><b>Información: </b><span id="info"></span></p>
+    </div>
+    <div id="contenedor-tableros"></div>
+    <div class="jugadores-info">
+      <span class="span-jugador">Jugador</span>
+      <span class="span-ordenador">Ordenador</span>
+    </div>
+
+    <div class="contenedor-contenedor-ships">
+      <p>Tus barcos disponibles</p>
       <div class="contenedor-barcos">
         <div id="0" class="submarine-preview submarine" draggable="true"></div>
         <div id="1" class="submarine-preview submarine" draggable="true"></div>
@@ -31,13 +63,14 @@
         ></div>
         <div id="6" class="carrier-preview carrier" draggable="true"></div>
       </div>
+    </div>
 
-      <div class="botones-container">
-        <button id="rotar-btn">Rotar barcos</button>
-        <button id="start-btn">Empezar partida</button>
-      </div>
-      <div class="container"></div>
+    <div class="botones-container">
+      <div id="rotar-btn">Rotar los barcos</div>
+      <div id="start-btn">Empezar partida</div>
+    </div>
 
+    <!-- Link a JavaScript del juego -->
     <script src="app.js"></script>
   </body>
 </html>

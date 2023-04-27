@@ -1,10 +1,4 @@
-//import { submarine, destroyer, cruiser, battleship, carrier } from "./barcos";
-
-// nº de turnos REDUCE
-//nº de celdas disponibles barco slice
-//bloqueBarco cada bloque de barco especifico
-//bloquesBarco bloques de barco especifico
-
+// Asignamos a variables los elementos del DOM de la página HTML con los que vamos a trabajar
 const contenedorTableros = document.querySelector("#contenedor-tableros");
 const contenedorBarcos = document.querySelector(".contenedor-barcos");
 const rotarButton = document.querySelector("#rotar-btn");
@@ -12,12 +6,45 @@ const startButton = document.querySelector("#start-btn");
 const infoDisplay = document.querySelector("#info");
 const turnDisplay = document.querySelector("#turn-display");
 const contadorTurnosDisplay = document.querySelector("#contador-turnos");
+const contenedorShips = document.querySelector(".contenedor-contenedor-ships");
 
+// Asignamos a variables los audios que vamos a utilizar en la página de juego (Efectos de sonido y música de fondo)
+let estadoAudio = true;
+let audioButton = document.getElementById("audioButton");
+let audioImage = document.getElementById("audioImage");
+let audioTheme = document.getElementById("audio-theme");
+audioTheme.volume = "0.2";
+let audioImpactado = document.getElementById("audio-impactado");
+audioImpactado.volume = "0.6";
+let audioDestruido = document.getElementById("audio-destruido");
+let audioFallado = document.getElementById("audio-fallado");
+
+// Función para poder controlar el audio de fondo de la página, y controlar los botones de "pause" y "play"
+function controladorAudio() {
+  if (estadoAudio) {
+    // Cambiamos la imagen y pausamos el audio
+    audioImage.src = "assets/images/play.png";
+    audioTheme.pause();
+    estadoAudio = false;
+  } else {
+    // Cambiamos la imagen y reanudamos el audio
+    audioImage.src = "assets/images/pause.png";
+    audioTheme.play();
+    estadoAudio = true;
+  }
+}
+
+// Al hacer clic sobre el botón, llamamos a la función 'controlarAudio()'
+audioButton.onclick = function () {
+  controladorAudio();
+};
+
+/* Array de turnos que vamos a utilizar para controlar los turnos que se realizan en el juego con un "REDUCE" */
 let turnos = [1];
 
-turnDisplay.textContent = "Posicionar barcos";
+turnDisplay.textContent = "Posiciona los barcos en el tablero.";
 infoDisplay.textContent =
-  "Coloque los barcos en su tablero para empezar la partida!";
+  "Coloca todos los barcos en el tablero para poder comenzar la partida.";
 
 // Rotar barcos para colocarlos en el tablero
 let rotacion = 0;
@@ -170,6 +197,18 @@ const nombresBarcos = barcosOrdenador.map((ship) => {
   return { nombre: ship.nombre, celdas: ship.celdas };
 });
 
+nombresBarcos.sort((a, b) => {
+  if (a.nombre < b.nombre) {
+    return -1;
+  } else if (a.nombre > b.nombre) {
+    return 1;
+  } else {
+    return 0;
+  }
+});
+
+console.log("sorteao", nombresBarcos);
+
 /***************************************************** */
 const dbName = "BattleshipDB";
 const storeName = "Barcos";
@@ -219,7 +258,10 @@ request.onupgradeneeded = (event) => {
 localStorage.setItem("barcosDisponibles", JSON.stringify(nombresBarcos));
 // Consulta desde web storage
 let dadesWebStorage = localStorage.getItem("barcosDisponibles");
-console.log("Barcos disponibles en el juego desde web storage --> ", JSON.parse(dadesWebStorage));
+console.log(
+  "Barcos disponibles en el juego desde web storage --> ",
+  JSON.parse(dadesWebStorage)
+);
 /************************************************* */
 
 const barcosOrdenadorDestruidos = [];
@@ -285,7 +327,6 @@ posicionesBarcos = [];
 let cmpt = 0;
 
 const addBarcos = (user, barco, startId) => {
-  // Se puede probar a hacer Set
   const celdasTablero = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
   let isHorizontal = user === "user" ? rotacion === 0 : randomBoolean;
@@ -399,7 +440,24 @@ function highlightArea(startIndex, ship) {
 let gameOver;
 let playerTurn;
 
-startButton.addEventListener("click", startGame);
+const startButtonPresionado = () => {
+  if (contenedorBarcos.children.length === 0) {
+    startButton.remove();
+    rotarButton.remove();
+    contenedorShips.remove();
+    const botonesContainer = document.querySelector('.botones-container');
+    const nuevoDiv = document.createElement('div');
+    nuevoDiv.textContent = 'Reiniciar partida';
+    nuevoDiv.classList.add('reiniciar-btn');
+    botonesContainer.appendChild(nuevoDiv);
+    nuevoDiv.addEventListener("click", function() {
+        location.reload();
+    });
+    startGame();
+  }
+};
+
+startButton.addEventListener("click", startButtonPresionado);
 
 //Start Game
 function startGame() {
@@ -409,7 +467,7 @@ function startGame() {
     console.log("BARCOSUSERBIEN:", barcosUser);
     console.log("BARCOSORDENADORBIEN:", barcosOrdenador);
     contadorTurnosDisplay.textContent = "1";
-    turnDisplay.textContent = "Tu turno";
+    turnDisplay.textContent = "Jugador";
     infoDisplay.textContent = "Toca una celda para disparar.";
     const celdasTableroOrdenador = document.querySelectorAll("#ordenador div");
     celdasTableroOrdenador.forEach((celda) =>
@@ -427,7 +485,9 @@ function handleClick(e) {
   if (!gameOver) {
     if (e.target.classList.contains("taken")) {
       e.target.classList.add("boom");
-      infoDisplay.textContent = "Has tocado un barco!";
+      infoDisplay.textContent = "¡Has tocado un barco!";
+      // BARCO TOCADO SONIDO
+      audioImpactado.play();
       let classes = Array.from(e.target.classList);
       console.log(classes);
       // Filtramos quitando celda
@@ -442,7 +502,9 @@ function handleClick(e) {
       checkScore("ordenador", ordenadorDerribados, playerSunkShips);
     }
     if (!e.target.classList.contains("taken")) {
+      //Aqui
       infoDisplay.textContent = "No has tocado ningún barco.";
+      audioFallado.play();
       e.target.classList.add("empty");
     }
     playerTurn = false;
@@ -460,7 +522,7 @@ function handleClick(e) {
 // Turno del ordenador
 function computerTurn() {
   if (!gameOver) {
-    turnDisplay.textContent = "Turno del ordenador";
+    turnDisplay.textContent = "Ordenador";
     infoDisplay.textContent = "El ordenador está disparando...";
 
     setTimeout(() => {
@@ -481,6 +543,7 @@ function computerTurn() {
       ) {
         celdasTableroJugador[randomIndex].classList.add("boom");
         infoDisplay.textContent = "El ordenador ha tocado un barco!";
+        audioImpactado.play();
         let classes = Array.from(celdasTableroJugador[randomIndex].classList);
         // Filtramos quitando celda
         classes = classes.filter((className) => className !== "celda");
@@ -495,6 +558,7 @@ function computerTurn() {
         checkScore("user", jugadoresDerribados, computerSunkShips);
       } else {
         infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
+        audioFallado.play();
         celdasTableroJugador[randomIndex].classList.add("empty");
       }
     }, 2000);
@@ -506,7 +570,7 @@ function computerTurn() {
         return acumulador + valorActual;
       });
       contadorTurnosDisplay.textContent = turnosTotales;
-      turnDisplay.textContent = "Tu turno";
+      turnDisplay.textContent = "Jugador";
       infoDisplay.textContent = "Toca una celda para disparar.";
       const celdasTableroOrdenador =
         document.querySelectorAll("#ordenador div");
@@ -540,6 +604,8 @@ function checkScore(user, arrayDerribados, userSunkShips) {
 
     if (compt == barco.posiciones.length) {
       barco.destruido = true;
+      //BARCO DESTRUIDO SONIDO
+      audioDestruido.play();
     }
   }
 

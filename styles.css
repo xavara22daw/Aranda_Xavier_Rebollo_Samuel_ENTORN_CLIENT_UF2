@@ -4,32 +4,20 @@ body {
   overflow-x: hidden;
 }
 
-#audioImage {
-  cursor: pointer;
-}
-
+/************* Estilos para la para la página principal index.html *************/
 .battleship-index {
   background-image: linear-gradient(rgba(4, 9, 30, 0.1), rgba(4, 9, 30, 0.1)),
-    url("assets/battleship.png");
+    url("assets/images/battleship.png");
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
 }
 
-.btn {
-  font-family: "Montserrat", sans-serif;
+#audioImage {
+  cursor: pointer;
 }
 
-#game-info {
-  width: 45%;
-  margin: auto;
-  background-color: yellow;
-  box-sizing: border-box;
-  padding: 5px;
-  margin-bottom: 5px;
-}
-
-.splash-container {
+.index-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,11 +25,13 @@ body {
   height: 55vh;
 }
 
-.splash-title {
-  font-family: "Bangers";
-  font-size: 11rem;
-  color: white;
-  -webkit-text-stroke: 2px black;
+.index-title {
+  font-family: "Black Ops One";
+  color: #ffffff;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777,
+    0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333,
+    0px 8px 7px #001135;
+  font-size: 9em;
 }
 
 .btn {
@@ -57,27 +47,72 @@ body {
   background-color: #13558e;
 }
 
-.splash-btn {
+.index-btn {
   font-size: 2rem;
   margin-left: 2rem;
   font-weight: 500;
 }
 
+/************* Estilos para la para la página de juego battleship.html *************/
 .background-juego {
-  background-image: url("assets/battleship-background.png");
+  background-image: url("assets/images/battleship-background.png");
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
 }
 
-.titulo {
-  font-family: "Bangers";
+#game-info {
+  width: 45%;
+  margin: auto;
+  background-color: rgba(0, 17, 53, 0.3);
+  box-sizing: border-box;
+  padding: 3px 10px 3px 10px;
+  margin-bottom: 5px;
   color: white;
+  border-radius: 10px;
+  border: 1px solid white;
+  margin-bottom: 10px;
+}
+
+.jugadores-info {
+  width: 45%;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  color: white;
+  font-family: "Black Ops One";
+  color: #ffffff;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777,
+    0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333,
+    0px 8px 7px #001135;
+  font-size: 2em;
+}
+
+.jugadores-info .span-jugador {
+  width: 50%;
   text-align: center;
-  font-size: 5em;
-  -webkit-text-stroke: 3px black;
-  margin-top: 4%;
-  margin-bottom: 1%
+}
+
+.jugadores-info .span-ordenador {
+  width: 50%;
+  text-align: center;
+}
+
+.span-ordenador {
+  margin-left: 3em;
+}
+
+.titulo {
+  font-family: "Black Ops One";
+  color: #ffffff;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777,
+    0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333,
+    0px 8px 7px #001135;
+  text-align: center;
+  font-size: 3em;
+  margin-bottom: 1%;
 }
 
 .celda {
@@ -113,18 +148,26 @@ body {
   flex-wrap: wrap;
 }
 
+.contenedor-contenedor-ships {
+  width: 45%;
+  margin: auto;
+  text-align: center;
+  background-color: rgba(0, 17, 53, 0.3);
+  color: white;
+  border-radius: 10px;
+  border: 1px solid white;
+  font-size: 19px;
+  height: 7.5em;
+}
+
 .contenedor-barcos {
-  width: 500px;
-  height: 50px;
-  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
-  opacity:0.9;
-  border: 1px solid black;
   border-radius: 10px;
   margin-top: 20px;
+  padding: 10px;
 }
 
 .submarine {
@@ -182,7 +225,7 @@ body {
 }
 
 .boom {
-  background-image: url("assets/barco_impactado.png");
+  background-image: url("assets/images/barco_impactado.png");
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
@@ -190,7 +233,7 @@ body {
 }
 
 .empty {
-  background-image: url("assets/barco_fallado.png");
+  background-image: url("assets/images/barco_fallado.png");
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
@@ -202,4 +245,27 @@ body {
   justify-content: center;
   align-items: center;
   height: 10vh;
+}
+
+#rotar-btn,
+#start-btn,
+.reiniciar-btn {
+  padding: 10px;
+  width: 10em;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  background-color: #00aaff;
+  cursor: pointer;
+  margin-left: 1em;
+}
+
+#rotar-btn:hover,
+#start-btn:hover,
+.reiniciar-btn:hover {
+  background-color: #13558e;
+}
+
+.oculto {
+  display: none;
 }
