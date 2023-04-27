@@ -351,10 +351,10 @@ const addBarcos = (user, barco, startId) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
-        barco.posiciones = bloquesBarco;
+        barco.posiciones = setBloquesBarco;
       });
     } else if (user === "user") {
-      posicionesBarcos.push(bloquesBarco);
+      posicionesBarcos.push(setBloquesBarco);
       setBloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
@@ -420,16 +420,17 @@ function highlightArea(startIndex, ship) {
   console.log("startID:", startIndex);
   console.log("ship:", ship);
 
-  const { bloquesBarco, valid, notTaken } = getValidity(
+  const { setBloquesBarco, valid, notTaken } = getValidity(
     celdasTableroJugador,
     isHorizontal,
     startIndex,
     ship
   );
   if (valid && notTaken) {
+    console.log("Setbloquesbarcohover:", setBloquesBarco);
     //Recorre todas las celdas y si la celda corresponde al barco la pinta.
     celdasTableroJugador.forEach((celda) => {
-      if (bloquesBarco.includes(celda)) {
+      if (setBloquesBarco.has(celda)) {
         celda.classList.add("hover");
       } else {
         celda.classList.remove("hover");
