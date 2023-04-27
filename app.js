@@ -193,9 +193,8 @@ barco.prototype.mensajeDestruccion = function () {
   console.log("El barco ha sido destruido");
   infoDisplay.textContent = "El barco ha sido destruido";
 };
-
+// ----> Map implementado
 let nombresBarcos = new Map();
-
 nombresBarcos = barcosOrdenador.map((ship, index) => {
   return [
     "Barco_" + parseInt(index + 1),
@@ -249,6 +248,7 @@ localStorage.setItem("barcosDisponibles", JSON.stringify(nombresBarcos));
 let queryWebStorage = localStorage.getItem("barcosDisponibles");
 queryWebStorage = JSON.parse(queryWebStorage);
 let dadesWebStorage = Object.fromEntries(queryWebStorage);
+// --> For-in implementado
 for (const key in dadesWebStorage) {
   console.log(
     "Datos consultados desde web storage y mostrados con un for-in:",
@@ -600,6 +600,7 @@ function checkScore(user, arrayDerribados, userSunkShips) {
 
     if (compt == barco.posiciones.length) {
       barco.destruido = true;
+      console.log("COMPROBAR DESTRUCCION:", barco)
       //BARCO DESTRUIDO SONIDO
       audioDestruido.play();
     }
