@@ -168,6 +168,7 @@ const barcosOrdenador = [
   battleshipOrdenador1,
   carrierOrdenador1,
 ];
+
 // Crear barcosUser
 const submarineUser1 = new submarine(33);
 const submarineUser2 = new submarine(18);
@@ -311,7 +312,9 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-  return { bloquesBarco, valid, notTaken };
+  setBloquesBarco = new Set(bloquesBarco);
+
+  return { setBloquesBarco, valid, notTaken };
 }
 
 posicionesBarcos = [];
@@ -326,7 +329,7 @@ const addBarcos = (user, barco, startId) => {
 
   let startIndex = startId ? startId : randomStartIndex;
 
-  const { bloquesBarco, valid, notTaken } = getValidity(
+  const { setBloquesBarco, valid, notTaken } = getValidity(
     celdasTablero,
     isHorizontal,
     startIndex,
@@ -335,16 +338,16 @@ const addBarcos = (user, barco, startId) => {
 
   if (valid && notTaken) {
     if (user === "ordenador") {
-      posicionesBarcos.push(bloquesBarco);
-      bloquesBarco.forEach((bloqueBarco) => {
+      posicionesBarcos.push(setBloquesBarco);
+      setBloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
-        barco.posiciones = bloquesBarco;
+        barco.posiciones = setBloquesBarco;
       });
     } else if (user === "user") {
-      posicionesBarcos.push(bloquesBarco);
-      bloquesBarco.forEach((bloqueBarco) => {
+      posicionesBarcos.push(setBloquesBarco);
+      setBloquesBarco.forEach((bloqueBarco) => {
         bloqueBarco.classList.add(barco.nombre);
         bloqueBarco.classList.add("taken");
 
@@ -409,16 +412,17 @@ function highlightArea(startIndex, ship) {
   console.log("startID:", startIndex);
   console.log("ship:", ship);
 
-  const { bloquesBarco, valid, notTaken } = getValidity(
+  const { setBloquesBarco, valid, notTaken } = getValidity(
     celdasTableroJugador,
     isHorizontal,
     startIndex,
     ship
   );
   if (valid && notTaken) {
+    console.log("Setbloquesbarcohover:", setBloquesBarco);
     //Recorre todas las celdas y si la celda corresponde al barco la pinta.
     celdasTableroJugador.forEach((celda) => {
-      if (bloquesBarco.includes(celda)) {
+      if (setBloquesBarco.has(celda)) {
         celda.classList.add("hover");
       } else {
         celda.classList.remove("hover");
