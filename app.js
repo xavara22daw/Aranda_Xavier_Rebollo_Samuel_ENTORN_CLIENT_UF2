@@ -8,6 +8,7 @@ const turnDisplay = document.querySelector("#turn-display");
 const contadorTurnosDisplay = document.querySelector("#contador-turnos");
 const contenedorShips = document.querySelector(".contenedor-contenedor-ships");
 const mensajeBarcosDisp = document.querySelector("#mensaje-disponibilidad");
+const tituloJuego = document.querySelector("#titulo")
 
 // Asignamos a variables los audios que vamos a utilizar en la página de juego (Efectos de sonido y música de fondo)
 let estadoAudio = true;
@@ -21,6 +22,12 @@ const audioDestruido = document.getElementById("audio-destruido");
 const audioFallado = document.getElementById("audio-fallado");
 const audioVictoria = document.getElementById("audio-victoria");
 audioVictoria.volume = "0.4";
+
+//Expresión regular
+let expressio = /(Hundir la flota|Batalla de barcos)/g;
+let cadena = tituloJuego.innerHTML;
+let cadenaRegExp = cadena.replace(expressio, "BATTLESHIP");
+tituloJuego.innerHTML = `${cadenaRegExp}`;
 
 // Función para poder controlar el audio de fondo de la página, y controlar los botones de "pause" y "play"
 function controladorAudio() {
@@ -534,7 +541,7 @@ function handleClick(e) {
   } else if (gameOver) {
     infoDisplay.textContent = "Has perdido, el ordenador ha ganado la partida.";
     turnDisplay.textContent = "La partida ha finalizado.";
-    
+
     audioTheme.pause();
     audioVictoria.play();
   }
