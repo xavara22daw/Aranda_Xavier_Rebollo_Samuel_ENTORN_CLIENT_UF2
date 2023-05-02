@@ -1,4 +1,4 @@
-// Declaramos varias variables para tener un control sobre el audio y el botón que lo controla
+// Declaramos varias variables para tener un control sobre el audio y el botón que lo controla cogiendo los elementos del DOM
 let estadoAudio = false;
 let audioButton = document.getElementById("audioButton");
 let audioImage = document.getElementById("audioImage");
