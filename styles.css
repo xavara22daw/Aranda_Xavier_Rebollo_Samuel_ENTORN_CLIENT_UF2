@@ -268,11 +268,7 @@ body {
   background-color: #13558e;
 }
 
-.inicio-btn a {
+.inicio-btn {
   text-decoration: none;
   color: white;
-}
-
-.oculto {
-  display: none;
 }

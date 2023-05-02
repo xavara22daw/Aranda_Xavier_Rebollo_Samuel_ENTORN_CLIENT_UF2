@@ -11,14 +11,16 @@ const mensajeBarcosDisp = document.querySelector("#mensaje-disponibilidad");
 
 // Asignamos a variables los audios que vamos a utilizar en la página de juego (Efectos de sonido y música de fondo)
 let estadoAudio = true;
-let audioButton = document.getElementById("audioButton");
-let audioImage = document.getElementById("audioImage");
-let audioTheme = document.getElementById("audio-theme");
+const audioButton = document.getElementById("audioButton");
+const audioImage = document.getElementById("audioImage");
+const audioTheme = document.getElementById("audio-theme");
 audioTheme.volume = "0.2";
-let audioImpactado = document.getElementById("audio-impactado");
+const audioImpactado = document.getElementById("audio-impactado");
 audioImpactado.volume = "0.6";
-let audioDestruido = document.getElementById("audio-destruido");
-let audioFallado = document.getElementById("audio-fallado");
+const audioDestruido = document.getElementById("audio-destruido");
+const audioFallado = document.getElementById("audio-fallado");
+const audioVictoria = document.getElementById("audio-victoria");
+audioVictoria.volume = "0.4";
 
 // Función para poder controlar el audio de fondo de la página, y controlar los botones de "pause" y "play"
 function controladorAudio() {
@@ -44,10 +46,22 @@ audioButton.onclick = function () {
 let turnos = [1];
 
 // Array que contiene un array con los nombres de los barcos que el usuario tiene que colocar. Se mostrará sorteado en la pantalla de juego
-let textoBarcosDisp = ["Submarinos", "Destroyers", "Crucero", "Acorazado", "Portaaviones"];
+let textoBarcosDisp = [
+  "Submarino x2",
+  "Destructor x2",
+  "Crucero",
+  "Acorazado",
+  "Portaaviones",
+];
+// --> Sort implementado
+textoBarcosDisp.sort();
 
-for (let b of textoBarcosDisp){
-  console.log("XAAAAAAAAAAAAAAAAAAAAAAAAA -->", )
+for (let i = 0; i < textoBarcosDisp.length; i++) {
+  if (i < textoBarcosDisp.length - 1) {
+    mensajeBarcosDisp.innerHTML += `${textoBarcosDisp[i]}, `;
+  } else {
+    mensajeBarcosDisp.innerHTML += `${textoBarcosDisp[i]}`;
+  }
 }
 
 turnDisplay.textContent = "Posiciona los barcos en el tablero.";
@@ -200,8 +214,9 @@ barco.prototype.mensajeDestruccion = function () {
   console.log("El barco ha sido destruido");
   infoDisplay.textContent = "El barco ha sido destruido";
 };
-// ----> Map implementado
+// ----> MAP implementado
 let nombresBarcos = new Map();
+// --> Map implemntado
 nombresBarcos = barcosOrdenador.map((ship, index) => {
   return [
     "Barco_" + parseInt(index + 1),
@@ -267,7 +282,7 @@ for (const key in dadesWebStorage) {
 const barcosOrdenadorDestruidos = [];
 const barcosUserDestruidos = [];
 
-// Asignar id con for of
+// --> For-of implementado
 let i = 0;
 for (barcoUser of barcosUser) {
   barcoUser.id = i;
@@ -287,7 +302,6 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     ? startIndex
     : startIndex - barco.celdas * width + width;
 
-  // Se puede probar a hacer Set
   bloquesBarco = [];
 
   for (let i = 0; i < barco.celdas; i++) {
@@ -318,10 +332,10 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
     (bloqueBarco) => !bloqueBarco.classList.contains("taken")
   );
 
-
   return { bloquesBarco, valid, notTaken };
 }
 
+// --> Set implementado
 posicionesBarcos = new Set();
 
 let cmpt = 0;
@@ -369,6 +383,7 @@ const addBarcos = (user, barco, startId) => {
   }
 };
 
+// --> Foreach implementado
 barcosOrdenador.forEach((barco) => addBarcos("ordenador", barco));
 
 // drag and drop mover barcos jugador
@@ -509,8 +524,11 @@ function handleClick(e) {
     );
     setTimeout(computerTurn, 2000);
   } else if (gameOver) {
-    turnDisplay.textContent = "Juego finalizado";
-    infoDisplay.textContent = "El juego ha terminado.";
+    infoDisplay.textContent = "Has perdido, el ordenador ha ganado la partida.";
+    turnDisplay.textContent = "La partida ha finalizado.";
+    
+    audioTheme.pause();
+    audioVictoria.play();
   }
 }
 
@@ -561,6 +579,7 @@ function computerTurn() {
     setTimeout(() => {
       playerTurn = true;
       turnos.push(1);
+      // --> Reduce implementado
       const turnosTotales = turnos.reduce((acumulador, valorActual) => {
         return acumulador + valorActual;
       });
@@ -574,8 +593,10 @@ function computerTurn() {
       );
     }, 4000);
   } else if (gameOver) {
-    turnDisplay.textContent = "Juego finalizado";
-    infoDisplay.textContent = "El juego ha terminado.";
+    infoDisplay.textContent = "Has ganado la partida, ¡Enhorabuena!.";
+    turnDisplay.textContent = "La partida ha finalizado.";
+    audioTheme.pause();
+    audioVictoria.play();
   }
 }
 
@@ -599,7 +620,7 @@ function checkScore(user, arrayDerribados) {
 
     if (compt == barco.posiciones.length) {
       barco.destruido = true;
-      console.log("Barco destruido");
+      console.log("Barco destruido!")
       //BARCO DESTRUIDO SONIDO
       audioDestruido.play();
     }
@@ -615,6 +636,7 @@ function checkScore(user, arrayDerribados) {
         barquilloOrd.mensajeDestruccion();
         const index = barcosOrdenador.indexOf(barquilloOrd);
         barcosOrdenadorDestruidos.push(barquilloOrd);
+        // --> Splice implementado
         barcosOrdenador.splice(index, 1);
         console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos);
         console.log("BarcosOrdenador:", barcosOrdenador);
