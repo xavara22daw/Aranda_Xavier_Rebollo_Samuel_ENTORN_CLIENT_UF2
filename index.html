@@ -6,40 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bienvenidos a Battleship</title>
     <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap"
-      rel="stylesheet"
-    />
-    <link href="https://fonts.googleapis.com/css?family=Black+Ops+One|Open+Sans" rel="stylesheet"/>
-    <!-- Pequeño JavaScript para controlar la reproducción del audio y botón que controla el sonido -->
-    <script>
-      window.onload = function () {
-        let estadoAudio = false;
-        let audioButton = document.getElementById("audioButton");
-        let audioImage = document.getElementById("audioImage");
-        let audio = document.getElementById("audio");
-        audio.volume = "0.2";
-
-        function controladorAudio() {
-          if (estadoAudio) {
-            // Cambiamos la imagen y pausamos el audio
-            audioImage.src = "assets/images/play.png";
-            audio.pause();
-            estadoAudio = false;
-          } else {
-            // Cambiamos la imagen y reanudamos el audio
-            audioImage.src = "assets/images/pause.png";
-            audio.play();
-            estadoAudio = true;
-          }
-        }
-
-        // Al hacer clic sobre el botón, llamamos a la función 'controlarAudio()'
-        audioButton.onclick = function () {
-          controladorAudio();
-        };
-      };
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Black+Ops+One|Open+Sans" rel="stylesheet" />
   </head>
   <body class="battleship-index">
 
@@ -53,9 +21,12 @@
     <div class="index-container">
       <h1 class="index-title">BATTLESHIP</h1>
       <div>
-        <a href="battleship.html" class="btn index-btn">Comenzar a jugar</a>
+        <button id="change-page" class="btn index-btn">Comenzar a jugar</button>
       </div>
     </div>
+
+    <!-- Pequeño JavaScript para controlar la reproducción del audio y botón que controla el sonido -->
+    <script type="module" src="/modules/principalIndex.js"></script>
 
   </body>
 </html>
