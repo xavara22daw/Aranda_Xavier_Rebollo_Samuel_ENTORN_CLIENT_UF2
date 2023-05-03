@@ -23,7 +23,7 @@ const audioFallado = document.getElementById("audio-fallado");
 const audioVictoria = document.getElementById("audio-victoria");
 audioVictoria.volume = "0.4";
 
-//Expresión regular
+// ***** Expresión regular -> Sustituimos el texto de un elemento del DOM
 let expressio = /(Hundir la flota|Batalla de barcos)/g;
 let cadena = tituloJuego.innerHTML;
 let cadenaRegExp = cadena.replace(expressio, "BATTLESHIP");
@@ -49,7 +49,7 @@ audioButton.onclick = function () {
   controladorAudio();
 };
 
-/* Array de turnos que vamos a utilizar para controlar los turnos que se realizan en el juego con un "REDUCE" */
+// Array de turnos que vamos a utilizar para controlar los turnos que se realizan en el juego con un "REDUCE"
 let turnos = [1];
 
 // Array que contiene un array con los nombres de los barcos que el usuario tiene que colocar. Se mostrará sorteado en la pantalla de juego
@@ -60,9 +60,11 @@ let textoBarcosDisp = [
   "Acorazado",
   "Portaaviones",
 ];
-// --> Sort implementado
+
+// ***** Sort implementado -> Ordenamos el array "textoBarcosDisp" con sort en orden alfabético
 textoBarcosDisp.sort();
 
+// Bucle para mostrar en la pantalla de juego mediante texto todos los barcos disponibles en el array "textoBarcosDisp"
 for (let i = 0; i < textoBarcosDisp.length; i++) {
   if (i < textoBarcosDisp.length - 1) {
     mensajeBarcosDisp.innerHTML += `${textoBarcosDisp[i]}, `;
@@ -71,11 +73,12 @@ for (let i = 0; i < textoBarcosDisp.length; i++) {
   }
 }
 
+// Mensajes informativos en la página de juego previos al comienzo de la partida
 turnDisplay.textContent = "Posiciona los barcos en el tablero.";
 infoDisplay.textContent =
   "Coloca todos los barcos en el tablero para poder comenzar la partida.";
 
-// Rotar barcos para colocarlos en el tablero
+// Función para rotar los barcos para colocarlos en el tablero
 let rotacion = 0;
 function rotar() {
   const barcos = Array.from(contenedorBarcos.children);
@@ -83,9 +86,10 @@ function rotar() {
   barcos.forEach((barco) => (barco.style.transform = `rotate(${rotacion}deg)`));
 }
 
+// Cuando presionamos el botón para rotar los barcos, estos hacen una rotación
 rotarButton.addEventListener("click", rotar);
 
-// Crear tablero
+// ***** Arrow function -> Función que crea los tableros del jugador y el ordenador y le proporciona estilo
 const width = 10;
 const crearTablero = (usuario) => {
   const contenedorTablero = document.createElement("div");
@@ -103,10 +107,11 @@ const crearTablero = (usuario) => {
   contenedorTableros.append(contenedorTablero);
 };
 
+// Llamamos a la funciones para crear los tableros del jugador y el ordenador
 crearTablero("user");
 crearTablero("ordenador");
 
-//Crear barcos
+// ***** Clases amb atributs i mètodes, herència i polimorfisme -> Clases que nos servirán para crear los objetos de los barcos
 class barco {
   constructor(id, nombre, celdas, posiciones, destruido) {
     this.id = id;
@@ -117,12 +122,14 @@ class barco {
   }
 }
 
+// ***** Herencia -> Herencia de la clase "Barco"
 class submarine extends barco {
   constructor(profundidad) {
     super(0, "submarine", 1, [], false);
     this.profundidad = profundidad;
   }
 
+  // ***** Método con polimorfismo
   mensajeDestruccion() {
     console.log("El submarino ha sido destruido");
     const infoDisplay = document.querySelector("#info");
@@ -178,7 +185,7 @@ class carrier extends barco {
   }
 }
 
-// Crear barcosOrdenador
+// Creamos objetos utilizando las clases. Estos serán los barcos del ordenador
 const submarineOrdenador1 = new submarine(30);
 const submarineOrdenador2 = new submarine(20);
 const destroyerOrdenador1 = new destroyer(2);
@@ -187,6 +194,7 @@ const cruiserOrdenador1 = new cruiser(13);
 const battleshipOrdenador1 = new battleship(6);
 const carrierOrdenador1 = new carrier(7);
 
+// Añadimos todos los barcos del ordenador a un array
 const barcosOrdenador = [
   submarineOrdenador1,
   submarineOrdenador2,
@@ -197,7 +205,7 @@ const barcosOrdenador = [
   carrierOrdenador1,
 ];
 
-// Crear barcosUser
+// Creamos objetos utilizando las clases. Estos serán los barcos del user
 const submarineUser1 = new submarine(33);
 const submarineUser2 = new submarine(18);
 const destroyerUser1 = new destroyer(3);
@@ -206,6 +214,7 @@ const cruiserUser1 = new cruiser(15);
 const battleshipUser1 = new battleship(5);
 const carrierUser1 = new carrier(6);
 
+// Añadimos todos los barcos del usuario a un array
 const barcosUser = [
   submarineUser1,
   submarineUser2,
@@ -216,14 +225,16 @@ const barcosUser = [
   carrierUser1,
 ];
 
-// Prototipo mensaje destruccion
+// ***** Prototipaje -> Creamos un prototipo de mensaje destrucción para la clase barco
 barco.prototype.mensajeDestruccion = function () {
   console.log("El barco ha sido destruido");
   infoDisplay.textContent = "El barco ha sido destruido";
 };
-// ----> MAP implementado
+
+// ***** MAP implementado -> Creamos un Map para guardar los nombres de los barcos disponibles en el juego
 let nombresBarcos = new Map();
-// --> Map implemntado
+
+// ***** Colección map implementada -> Utilizamos la colección map para añadir elementos al array "nombresBarcos"
 nombresBarcos = barcosOrdenador.map((ship, index) => {
   return [
     "Barco_" + parseInt(index + 1),
@@ -231,19 +242,20 @@ nombresBarcos = barcosOrdenador.map((ship, index) => {
   ];
 });
 
-/***************************************************** */
+// ***** IndexedDB -> Guardamos en IndexedDB los nombres de todos los ordenadores disponibles en el juego
+/***************************************************************************************************** */
 const dbName = "BattleshipDB";
 const storeName = "Barcos";
 
-// Abrir la base de datos
+// Abrimos la base de datos
 const request = indexedDB.open(dbName, 1);
 
-// Manejar errores en caso de que no se pueda abrir la base de datos
+// Manejamos errores en caso de que no se pueda abrir la base de datos
 request.onerror = (event) => {
   console.log("Error al abrir la base de datos", event.target.errorCode);
 };
 
-// Si se abre correctamente, almacenar los datos en la base de datos
+// Si la DB se abre correctamente, almacenamos los datos en la base de datos
 request.onsuccess = (event) => {
   const db = event.target.result;
 
@@ -251,64 +263,69 @@ request.onsuccess = (event) => {
   const transaction = db.transaction([storeName], "readwrite");
   const objectStore = transaction.objectStore(storeName);
 
-  // Asumiendo que los arrays tienen una propiedad "id" única
+  // Asumimos que los arrays tienen una propiedad "id" única
   objectStore.add({ id: "barcosDisponibles", data: nombresBarcos });
 
-  // Cerrar la transacción y la base de datos
+  // Cerramos la operación y la base de datos
   transaction.oncomplete = () => {
     db.close();
   };
 };
 
-// Crear la estructura de la base de datos si es necesario
+// Creamos la estructura de la base de datos si es necesario
 request.onupgradeneeded = (event) => {
   const db = event.target.result;
 
-  // Crear la tabla si no existe
+  // Creamos la tabla si no existe
   if (!db.objectStoreNames.contains(storeName)) {
     const objectStore = db.createObjectStore(storeName, { keyPath: "id" });
   }
 };
-/************************************************* */
+/***************************************************************************************************** */
 
-/************************************************* */
+// ***** WeStorage/LocalStorage -> Guardamos en localstorage los nombres de todos los ordenadores disponibles en el juego
+/***************************************************************************************************** */
 localStorage.setItem("barcosDisponibles", JSON.stringify(nombresBarcos));
 // Consulta desde web storage
 let queryWebStorage = localStorage.getItem("barcosDisponibles");
 queryWebStorage = JSON.parse(queryWebStorage);
 let dadesWebStorage = Object.fromEntries(queryWebStorage);
-// --> For-in implementado
+
+// ***** Colección for-in implementada -> Utilizamos esta colección para recorrer el array y mostrar por consola los nombres de todos los barcos disponibles
 for (const key in dadesWebStorage) {
   console.log(
     "Datos consultados desde web storage y mostrados con un for-in:",
     `${key}: nombre -> ${dadesWebStorage[key].nombre}, celdas -> ${dadesWebStorage[key].celdas}`
   );
 }
-/************************************************* */
+/***************************************************************************************************** */
 
+// Creamos varios Arrays para guardar los barcos que han sido destruidos
 const barcosOrdenadorDestruidos = [];
 const barcosUserDestruidos = [];
 
-// --> For-of implementado
+// ***** Colección for-of implementada -> Utilizamos esta colección para asignar un id al array "barcosUser"
 let i = 0;
 for (barcoUser of barcosUser) {
   barcoUser.id = i;
   i++;
 }
 
-
+// Variable que utilizaremos para comprobar si hemos arrastrado un barco con D&D
 let notDropped;
 
+// Función para comprobar si la posición en la que se coloca el barco con D&D es correcta o no
 function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   let validStart = isHorizontal
     ? startIndex <= width * width - barco.celdas
       ? startIndex
       : width * width - barco.celdas
-    : // Handle vertical
+    : // Controlador en caso de que el barco esté en posición vertical
     startIndex <= width * width - width * barco.celdas
     ? startIndex
     : startIndex - barco.celdas * width + width;
 
+  // Este array guarda las posiciones que tendrá cada barco
   bloquesBarco = [];
 
   for (let i = 0; i < barco.celdas; i++) {
@@ -320,7 +337,8 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   }
 
   let valid;
-  //Horizontal else vertical
+
+  // Pequeño controlador que utilizamos para controlar y colocar los barcos dependiendo de su orientzación (vertical/horizontal)
   if (isHorizontal) {
     bloquesBarco.every(
       (_bloqueBarco, index) =>
@@ -342,11 +360,12 @@ function getValidity(celdasTablero, isHorizontal, startIndex, barco) {
   return { bloquesBarco, valid, notTaken };
 }
 
-// --> Set implementado
+// ***** Set implementado -> Implementamos un Set donde vamos a guardar las posiciones de los barcos
 posicionesBarcos = new Set();
 
 let cmpt = 0;
 
+// Función para colocar los barcos en los tableros (tanto para el ordenador como para el usuario)
 const addBarcos = (user, barco, startId) => {
   const celdasTablero = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
@@ -362,15 +381,18 @@ const addBarcos = (user, barco, startId) => {
     barco
   );
 
+  // Si las posiciones donde se va a colocar un barco son validas y no están cogidas, el barco puede ser añadido a esas posiciones
   if (valid && notTaken) {
+    // Para colocar los barcos del ordenador
     if (user === "ordenador") {
       posicionesBarcos.add(bloquesBarco);
       bloquesBarco.forEach((bloqueBarco) => {
-        bloqueBarco.classList.add(barco.nombre);
+        bloqueBarco.classList.add(barco.nombre+"Ord");
         bloqueBarco.classList.add("taken");
 
         barco.posiciones = bloquesBarco;
       });
+    // Para colocar los barcos del usuario
     } else if (user === "user") {
       posicionesBarcos.add(bloquesBarco);
       bloquesBarco.forEach((bloqueBarco) => {
@@ -381,6 +403,7 @@ const addBarcos = (user, barco, startId) => {
       });
     }
 
+    // Actualizamos la posición del barco que se coloca con D&D del array "barcoUser"
     if (user === "user") {
       barcosUser[barco.id].posiciones = barco.posiciones;
     }
@@ -390,25 +413,27 @@ const addBarcos = (user, barco, startId) => {
   }
 };
 
-// --> Foreach implementado
+// ***** foreach implementado -> Bucle foreach utilizado para iterar por el array "barcosOrdenador"
 barcosOrdenador.forEach((barco) => addBarcos("ordenador", barco));
 
-// drag and drop mover barcos jugador
+// ***** Drag And Drop implementado -> D&D para mover los barcos del jugador
 let draggedShip;
 const optionShips = Array.from(contenedorBarcos.children);
 
-// ***** Función dinámica creada a través del constructor
+// ***** Función dinámica implementa -> Función creada a través del constructor
 var dragStart = new Function(
   "e",
   "notDropped = false; draggedShip = e.target;"
 );
 
+// Función que controla cuando estamos arrastrando un barco por el tablero del usuario (proporciona el hover)
 const dragOver = (e) => {
   e.preventDefault();
   const barco = barcosUser[draggedShip.id];
   highlightArea(e.target.id, barco);
 };
 
+// Función que controla cuando soltamos un barco el el trablero del usuario
 const dropShip = (e) => {
   const startId = e.target.id;
   const ship = barcosUser[draggedShip.id];
@@ -425,13 +450,14 @@ optionShips.forEach((optionShip) =>
   optionShip.addEventListener("dragstart", dragStart)
 );
 
+// A cada celda del tablero del usuario añadimos las funciones del D&D que nos permitirán colocar nuestros barcos en el tablero
 const celdasTableroJugador = document.querySelectorAll("#user div");
 celdasTableroJugador.forEach((celda) => {
   celda.addEventListener("dragover", dragOver);
   celda.addEventListener("drop", dropShip);
 });
 
-// Highlight
+// Función que nos permitirá realizar el efecto hover al arrastrar el barco por el tablero del usuario
 function highlightArea(startIndex, ship) {
   const celdasTableroJugador = document.querySelectorAll("#user div");
   let isHorizontal = rotacion === 0;
@@ -442,8 +468,9 @@ function highlightArea(startIndex, ship) {
     startIndex,
     ship
   );
+
   if (valid && notTaken) {
-    //Recorre todas las celdas y si la celda corresponde al barco la pinta.
+    //Recorre todas las celdas y si la celda corresponde al barco la pinta
     celdasTableroJugador.forEach((celda) => {
       if (bloquesBarco.includes(celda)) {
         celda.classList.add("hover");
@@ -456,9 +483,11 @@ function highlightArea(startIndex, ship) {
   }
 }
 
+// Funciones de control sobre el juego
 let gameOver;
 let playerTurn;
 
+// Función para comenzar el juego en el momento en el que se presione el botón de comenzar partida
 const startButtonPresionado = () => {
   if (contenedorBarcos.children.length === 0) {
     startButton.remove();
@@ -476,9 +505,10 @@ const startButtonPresionado = () => {
   }
 };
 
+// Si presionamos el botón para comenzar partida, se ejecuta la función "startButtonPresionado"
 startButton.addEventListener("click", startButtonPresionado);
 
-//Start Game
+// Función para comenzar el juego
 function startGame() {
   if (contenedorBarcos.children.length != 0) {
     infoDisplay.textContent = "Debes colocar todos los barcos para empezar.";
@@ -495,18 +525,21 @@ function startGame() {
   }
 }
 
+// Declaramos varios arrays de control sobre el juego
 let ordenadorTocados = [];
 let jugadoresDerribados = [];
 const computerSunkShips = [];
 
+// Función para controlar los disparos del usuario sobre el tablero del ordenador
 function handleClick(e) {
   if (!gameOver) {
+    // En caso de impactar a una celda donde hay un barco
     if (e.target.classList.contains("taken")) {
       e.target.classList.add("boom");
       infoDisplay.textContent = "¡Has tocado un barco!";
-      // BARCO TOCADO SONIDO
       audioImpactado.play();
       let classes = Array.from(e.target.classList);
+      // Filtramos para quitar los nombres de las clases y que solo quede el tipo de barco que es
       // Filtramos quitando celda
       classes = classes.filter((className) => className !== "celda");
       // Filtramos quitando taken
@@ -519,7 +552,7 @@ function handleClick(e) {
       checkScore("ordenador", ordenadorTocados, );
     }
     if (!e.target.classList.contains("taken")) {
-      //Aqui
+      // En caso de impactar a una celda donde NO hay un barco
       infoDisplay.textContent = "No has tocado ningún barco.";
       audioFallado.play();
       e.target.classList.add("empty");
@@ -531,21 +564,23 @@ function handleClick(e) {
     );
     setTimeout(computerTurn, 2000);
   } else if (gameOver) {
+    // En caso de que gameOver sea true, el ordenador habrá ganado la partida y se indica por pantalla
     infoDisplay.textContent = "Has perdido, el ordenador ha ganado la partida.";
     turnDisplay.textContent = "La partida ha finalizado.";
-
     audioTheme.pause();
     audioVictoria.play();
   }
 }
 
-// Turno del ordenador
+// Función para controlar los disparos y los turnos del ordenador
 function computerTurn() {
   if (!gameOver) {
     turnDisplay.textContent = "Ordenador";
     infoDisplay.textContent = "El ordenador está disparando...";
 
+    // timeOut para controlar el tiempo entre disparos del ordenador
     setTimeout(() => {
+      // Generamos un número aleatorio donde el ordenador disparará al tablero de los usuarios 
       let randomIndex = Math.floor(Math.random() * width * width);
       const celdasTableroJugador = document.querySelectorAll("#user div");
 
@@ -557,7 +592,8 @@ function computerTurn() {
       ) {
         computerTurn();
         return;
-      } else if (
+      } // Si la celda es un barco y no está tocada controlamos el impacto.
+      else if (
         celdasTableroJugador[randomIndex].classList.contains("taken") &&
         !celdasTableroJugador[randomIndex].classList.contains("boom")
       ) {
@@ -575,6 +611,7 @@ function computerTurn() {
         jugadoresDerribados.push(
           parseInt(celdasTableroJugador[randomIndex].id)
         );
+        // Checkeamos el score y los barcos.
         checkScore("user", jugadoresDerribados);
       } else {
         infoDisplay.textContent = "El ordenador no ha tocado ningún barco.";
@@ -586,7 +623,7 @@ function computerTurn() {
     setTimeout(() => {
       playerTurn = true;
       turnos.push(1);
-      // --> Reduce implementado
+      //***** Reduce implementado -> Reduce que utilizamos para aumentar los turnos del usuario
       const turnosTotales = turnos.reduce((acumulador, valorActual) => {
         return acumulador + valorActual;
       });
@@ -600,6 +637,7 @@ function computerTurn() {
       );
     }, 4000);
   } else if (gameOver) {
+    // En caso de que gameOver sea true, el jugador habrá destruido todos los barcos y habrá ganado la partida
     infoDisplay.textContent = "Has ganado la partida, ¡Enhorabuena!.";
     turnDisplay.textContent = "La partida ha finalizado.";
     audioTheme.pause();
@@ -607,13 +645,14 @@ function computerTurn() {
   }
 }
 
+// Función para comprobar las puntuaciones (barcos impactados/destruidos)
 function checkScore(user, arrayDerribados) {
+  // Comprobamos si el barco ha sido destruido posición a posición.
   function checkShip(barco, arrayDerribados) {
     barco.posiciones.forEach((posicion) => {
       for (let i = 0; i < arrayDerribados.length; i++) {
         if (arrayDerribados[i] == posicion.id) {
           posicion.id = "tocado";
-          
         }
       }
     });
@@ -628,22 +667,23 @@ function checkScore(user, arrayDerribados) {
     if (compt == barco.posiciones.length) {
       barco.destruido = true;
       console.log("Barco destruido!")
-      //BARCO DESTRUIDO SONIDO
+      // Sonido de barco destruido
       audioDestruido.play();
     }
   }
 
   if (user === "ordenador") {
-    // CHECK DE TODOS LOS BARCOS
+    // Comprobación de todos los barcos del ordenador
     barcosOrdenador.forEach((barco) => checkShip(barco, arrayDerribados));
 
-    // CHECKEO DE BARCOS DESTRUIDOS POST CHECK
+    // Comprobación de todos los barcos destruidos después de haber comprobado anteriormente todos los barcos
     barcosOrdenador.forEach((barquilloOrd) => {
       if (barquilloOrd.destruido) {
+        // Si el barco está destruido, indicamos un mensaje de destrucción implementado el método de las clases
         barquilloOrd.mensajeDestruccion();
         const index = barcosOrdenador.indexOf(barquilloOrd);
         barcosOrdenadorDestruidos.push(barquilloOrd);
-        // --> Splice implementado
+        // ***** Splice implementado -> Eliminamos la posición del array del barco que ha sido destruido
         barcosOrdenador.splice(index, 1);
         console.log("BarcosOrdenadorDestruidos:", barcosOrdenadorDestruidos);
         console.log("BarcosOrdenador:", barcosOrdenador);
@@ -651,26 +691,30 @@ function checkScore(user, arrayDerribados) {
     });
   }
   if (user === "user") {
-    // CHECK DE TODOS LOS BARCOS USER
+    // Comprobación de todos los barcos del usuario.
     barcosUser.forEach((barquilloUser) =>
       checkShip(barquilloUser, arrayDerribados)
     );
 
-    // CHECKEO DE BARCOS DESTRUIDOS POST CHECK USER
+    // Comprobación de todos los barcos del usuarios post check.
     barcosUser.forEach((barquilloUser) => {
       if (barquilloUser.destruido) {
+        // Si el barco está destruido, indicamos un mensaje de destrucción implementado el método de las clases
         barquilloUser.mensajeDestruccion();
         const index = barcosUser.indexOf(barquilloUser);
         barcosUserDestruidos.push(barquilloUser);
+        // ***** Splice implementado -> Eliminamos la posición del array del barco que ha sido destruido
         barcosUser.splice(index, 1);
         console.log("BarcosUserDestruidos:", barcosUserDestruidos);
         console.log("BarcosUser:", barcosUser);
       }
     });
   }
+  // Si "barcosOrdenadorDestruidos" === 7, gameOver es true y el jugador ha gando la partida
   if (barcosOrdenadorDestruidos.length == 7) {
     gameOver = true;
   }
+  // Si "barcosUserDestruidos" === 7, gameOver es true y el ordenador ha gando la partida
   if (barcosUserDestruidos == 7) {
     gameOver = true;
   }
